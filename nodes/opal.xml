@@ -1,0 +1,208 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+        <description>
+        Opal (Java)
+        Automatic Web service wrappers for scientific applications on Grid resources.
+        </description>
+
+        <copyright>
+        Copyright (c) 2000 - 2008 The Regents of the University of California.
+        All rights reserved.
+        </copyright>
+
+        <changelog>
+        </changelog>
+
+        <package>apache-tomcat</package>
+        <package>tomcat-connectors</package>
+        <package>opal</package>
+        <package>rocks-opal</package>
+        <package>roll-opal-usersguide</package>
+
+<post>
+
+<!-- Set database access -->
+if [ ! -f /var/lock/subsys/mysqld ]; then
+    /etc/init.d/mysqld start
+fi
+
+/usr/bin/mysqladmin create opaldb
+<file name="/opt/opal/etc/opal.pass" perms="0600">
+<eval>
+mkpasswd -l 10 -s 0 2> /dev/null
+</eval>
+</file>
+
+OPAL_DB_PASS=`cat /opt/opal/etc/opal.pass`
+echo -en GRANT ALL PRIVILEGES ON opaldb.* TO 'opal'@'localhost' IDENTIFIED BY \'$OPAL_DB_PASS\' \; | /usr/bin/mysql
+
+mv /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsql
+mv /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
+sed -i "s/opal_mysql_passwd/$OPAL_DB_PASS/" /opt/opal/etc/hibernate-opal.cfg.xml
+chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
+
+<!-- add tomcat user -->
+/usr/sbin/useradd -M -u412 -c "Tomcat" -d /opt/tomcat tomcat
+chown -R tomcat.tomcat /opt/tomcat
+chown -R tomcat.tomcat /opt/tomcat-*
+/opt/rocks/bin/rocks sync users
+
+<!-- configure mod_jk -->
+
+<file name="/etc/httpd/conf.d/mod_jk.conf">
+LoadModule jk_module modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/workers.properties
+
+# Where to put jk logs
+JkLogFile     /var/log/httpd/mod_jk.log
+
+# Set the jk log level [debug/error/info]
+JkLogLevel    info
+
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions     +ForwardKeySize +ForwardURICompat -ForwardDirectories
+
+# JkRequestLogFormat set the request format
+JkRequestLogFormat     "%w %V %T"
+</file>
+
+<file name="/etc/httpd/conf/workers.properties">
+workers.java_home=/usr/java/latest
+# Define 1 real worker using ajp13
+worker.list=worker1
+# Set properties for worker1 (ajp13)
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009
+</file>
+
+sed -i 's/AddHandler imap-file map/#AddHandler imap-file map/g' /etc/httpd/conf/httpd.conf
+sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/httpd.conf
+
+#sed 's/Include conf.d\/rocks.conf//g' /etc/httpd/conf/httpd.conf
+
+
+<!-- configure and turn on tomcat -->
+/sbin/chkconfig --add tomcat-opal 
+/etc/init.d/tomcat-opal start
+/etc/init.d/httpd restart
+
+<!-- check for tomcat -->
+export CATALINA_HOME=/opt/tomcat
+if ! test -d $CATALINA_HOME; then \
+    echo "Error: Tomcat is not installed in $CATALINA_HOME or CATALINA_HOME is not set correctly"; \
+    exit; \
+fi
+
+<!-- Make NFS shared directory for opal jobs -->
+mkdir -m0755 -p /export/opal/opal-jobs 
+chown -R tomcat:tomcat /export/opal
+echo "opal &Kickstart_PrivateHostname;:/export/&amp;" &gt;&gt; /etc/auto.share
+rocks sync config
+rocks sync users
+/etc/init.d/autofs reload
+
+ls /share/opal/opal/opal-jobs
+ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
+cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
+
+<!-- update opal.properties file -->
+mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
+
+<file name="/opt/opal/etc/opal.properties" perm="0644">
+tomcat.url=http://&Kickstart_PublicHostname;:8080
+num.procs=2
+mpi.run=/opt/openmpi/bin/mpirun
+working.dir=opal-jobs
+mail.enable=true
+mail.smtp.host=smtp.gmail.com
+mail.smtp.auth=true
+mail.smtp.debug=false
+mail.smtp.from=noreply@&Kickstart_PublicHostname;
+mail.smtp.user=nbcropal@gmail.com
+mail.smtp.password=spiritrocks
+opal.datalifetime=4 days
+opal.hard_limit=3600
+opal.jobmanager=edu.sdsc.nbcr.opal.manager.DRMAAJobManager
+drmaa.pe=mpich
+drmaa.queue=all.q
+globus.gatekeeper=host:2119/jobmanager-sge
+globus.service_cert=/path/to/your/globus/cert
+globus.service_privkey=/path/to/your/globus/key
+globus.gridftp_base=gsiftp://host:2811/working_dir
+csf4.workingDir=opal_runs
+mpi.script=/opt/condor/etc/examples/mp1script
+opal.ip.processing=true
+opal.ip.limit=35
+opal.ip.blacklist=66.102.7.104
+opal.ip.whitelist=66.102.7.105, 127.0.0.1
+</file>
+
+<!-- Set correct number of processors for SGE -->
+proc_count=0
+if test -z /opt/gridengine; then 
+    proc_count=`cat /proc/cpuinfo | grep "processor" | wc -l` 
+else
+   procs=`qstat -f | grep BIP | awk '{print $3}' | cut -d'/' -f3`
+   for i in $procs; do 
+       proc_count=$(($proc_count + $i))
+   done
+fi
+sed -i "s/num.procs=2/num.procs=$proc_count/" /opt/opal/etc/opal.properties
+
+<!-- Install opal -->
+
+chown -R tomcat:tomcat /opt/opal
+cd /opt/opal
+. /etc/profile.d/java.sh
+. /etc/profile.d/sge-binaries.sh
+
+su tomcat -c "ant install"; 
+
+<!-- Enable directory listing for job output -->
+FILE=$CATALINA_HOME/conf/web.xml
+pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
+num=`expr $pre + 1`
+sed -i "${num} s/false/true/" $FILE
+
+<!-- add cron entry to remove old jobs -->
+<file name="/etc/cron.daily/opal-job-cleanup" perms="0755">
+#!/bin/bash
+
+# Removes old opal job directories older then default days
+
+CATALINA_HOME=/opt/tomcat
+# default number of days to keep job direcotry 
+n=4
+
+#cd $CATALINA_HOME/webapps/opal-jobs
+cd $CATALINA_HOME/webapps/ROOT
+dirs=`find . -type d -name 'app*' -mtime +$n -print`
+for i in $dirs
+do
+    rm -rf $i
+done
+</file>
+
+<!-- turn on tomcat -->
+/etc/init.d/tomcat-opal stop 
+sleep 10
+/etc/init.d/tomcat-opal start
+sleep 10
+
+<!-- update www docs with correct hostname -->
+sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/5.3/*.html
+
+<!-- add link to opal reference guide -->
+ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.3/refguide
+
+<!-- Deploy possible installed applications -->
+su tomcat -c "/opt/opal/configs/deploy.sh" 
+
+</post>
+</kickstart>

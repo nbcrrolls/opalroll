@@ -1,0 +1,66 @@
+<chapter id="contributors" xreflabel="Opal Contributors">
+
+<title>Opal Contributors</title>
+
+<simplesect>
+<title>Organizations</title>
+
+<para>The organizations that made the development of Opal possible: </para>
+
+<itemizedlist>
+	<listitem><para>
+	<ulink url="http://nbcr.net">National Biomedical Computation Resource (NBCR)</ulink>
+	</para></listitem>
+
+	<listitem><para>
+	<ulink url="http://www.sdsc.edu">San Diego Supercomputer Center (SDSC)</ulink>
+	</para></listitem>
+
+	<listitem><para>
+	<ulink url="http://camera.calit2.net/">Community Cyberinfrastructure for Advanced Marine Microbial Ecology Research and Analysis (CAMERA)</ulink>
+	</para></listitem>
+
+	<listitem><para>
+	<ulink url="http://www.calit2.net/">California Institute for Telecommunications and Information Technology (CALIT2)</ulink>
+	</para></listitem>
+</itemizedlist>
+</simplesect>
+
+<simplesect>
+<title>Funding Agencies</title>
+
+<para>
+Funding agencies behind Opal:
+</para>
+
+<itemizedlist>
+    <listitem><para>National Institutes of Health</para></listitem>
+    <listitem><para>National Center for Research Resources</para></listitem>
+    <listitem><para>National Science Foundation</para></listitem>
+    <listitem><para>Gordon and Betty Moore Foundation</para></listitem>
+    <listitem><para>National Center for Research Resources</para></listitem>
+</itemizedlist>
+
+</simplesect>
+
+
+<simplesect>
+<title>Developers and Affiliations</title>
+
+<para>Current Contributors</para>
+<itemizedlist>
+	<listitem><para>Sriram Krishnan: Lead Developer</para></listitem>
+	<listitem><para>Jane Ren: MetaServer plug-in, CSF4 plug-in</para></listitem>
+	<listitem><para>Luo Yuan: CSF4 plug-in</para></listitem>
+	<listitem><para>Nadya Williams: Dashboard, Rocks Rolls </para></listitem>
+</itemizedlist>
+
+<para>Past Contributors</para>
+<itemizedlist>
+	<listitem><para>Luca Clementi: Dashboard, Dymanic GUI Generation</para></listitem>
+	<listitem><para>Wes Goodman: Perl and Python clients</para></listitem>
+</itemizedlist>
+
+</simplesect>
+
+</chapter>

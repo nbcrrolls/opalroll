@@ -1,0 +1,55 @@
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
+	<!ENTITY preface    SYSTEM "preface.sgml">
+	<!ENTITY chapter-01 SYSTEM "introduction.sgml">
+	<!ENTITY chapter-02 SYSTEM "contributors.sgml">
+	<!ENTITY chapter-03 SYSTEM "download.sgml">
+	<!ENTITY chapter-04 SYSTEM "requirements.sgml">
+	<!ENTITY chapter-05 SYSTEM "installing.sgml">
+        <!ENTITY chapter-06 SYSTEM "autointerface.sgml">
+	<!ENTITY chapter-07 SYSTEM "using.sgml">
+        <!ENTITY chapter-08 SYSTEM "contact.sgml">
+	<!ENTITY chapter-09 SYSTEM "copyrights.sgml">
+]>
+
+<book>
+<bookinfo>
+
+	<title> Opal Roll: Users Guide </title>
+
+        <subtitle>
+                <inlinemediaobject>
+                        <imageobject>
+                                <imagedata fileref="images/opal-logo.png" scale=50>
+                        </imageobject>
+                </inlinemediaobject>
+        </subtitle>
+
+
+	<edition>Version @VERSION@</edition>
+
+	<pubdate>@PUBDATE@</pubdate>
+
+	<copyright id="copyright" xreflabel="copyright">
+		<year>@YEAR@</year>
+		<holder>University of California - San Diego</holder>
+	</copyright>
+
+	<releaseinfo>
+		<ulink url="roll-opal-usersguide.pdf">(PDF version)</ulink>
+	</releaseinfo>
+
+</bookinfo>
+
+&preface;
+&chapter-01;
+&chapter-02;
+&chapter-03;
+&chapter-04;
+&chapter-05;
+&chapter-06;
+&chapter-07;
+&chapter-08;
+&chapter-09;
+
+</book>

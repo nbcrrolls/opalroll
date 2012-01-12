@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# chkconfig: 35 99 01
+# description: Tomcat server 
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# Source init scripts
+. /etc/profile.d/java.sh
+. /etc/profile.d/sge-binaries.sh
+
+if [ -x /etc/sysconfig/tomcat/config ]; then
+	. /etc/sysconfig/tomcat/config
+fi
+
+export JAVA_OPTS=-Djava.awt.headless=true
+export CATALINA_HOME=/opt/tomcat
+PS="/bin/ps -ef"
+pid=`$PS | grep tomcat | grep java | grep -v grep | awk '{print $2}'`
+LOCK=/var/lock/subsys/tomcat-opal
+
+
+start() {
+	if [ -n "$pid" ]; then
+		echo "Tomcat $pid is already running "
+		exit 0
+	fi
+
+	echo -n "Starting tomcat: "
+	if [ -x /etc/sysconfig/tomcat/start.sh ]; then
+		su tomcat -c /etc/sysconfig/tomcat/start.sh
+	else
+		su tomcat -c $CATALINA_HOME/bin/startup.sh
+	fi
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch $LOCK
+}
+
+
+stop () {
+	if [ ! -n "$pid" ]; then
+		echo "Tomcat is not running "
+       		exit 0
+	fi
+
+	echo -n "Shutting down tomcat gmond: "
+	if [ -x /etc/sysconfig/tomcat/stop.sh ]; then
+		su tomcat -c /etc/sysconfig/tomcat/stop.sh
+	else
+		su tomcat -c $CATALINA_HOME/bin/shutdown.sh
+	fi
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f $LOCK
+}
+
+status () {
+	pid=`$PS | grep tomcat | grep -v grep  | grep -v status | awk '{print $2}'`
+	if [ -n "$pid" ]; then
+		echo "Tomcat $pid is running " 
+	else
+		echo "Tomcat is not running"
+	fi
+}
+
+case "$1" in
+	start)
+		start
+		;;
+
+	stop)
+		stop
+		;;
+
+	status)
+		status
+		;;
+
+	*)
+		echo $"Usage: $0 {start | stop | status}"
+		exit 1
+esac
+
+exit 0

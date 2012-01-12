@@ -1,0 +1,484 @@
+<chapter id="using" xreflabel="Using the Opal Roll">
+
+
+<title>Using the Opal Roll</title>
+
+<para>
+Please see more details in <ulink url="http://yourservername/roll-documentation/opal/@ROCKS_VERSION@/refguide"> The Reference Guide </ulink>.
+</para>
+
+<section id="important" xreflabel="Important Points">
+<title>Important Points and Debugging Hints</title>
+
+<itemizedlist>
+<listitem><para>If you have an older version of Opal installed, it is better to  remove it
+in order to avoid possible conflicts.</para></listitem>
+<listitem><para>DRMAA is enabled by default.  If you only have a frontend or do not want to use DRMAA, 
+then you should edit <filename>/opt/opal/etc/opal.properties</filename> to change the job manager from
+DRMAA to Fork.
+</para></listitem>
+<listitem><para>Run as user tomcat when deploying/undeploying services.</para></listitem>
+<listitem><para>Make sure your binaries work locally on the frontend and all compute nodes.</para></listitem>
+<listitem><para>Make sure you can ssh to all compute nodes from frontend without the need to enter a password.</para></listitem>
+<listitem><para>Run <command>df -H</command> to check if system is full.</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="using-opal" xreflabel="Opal on Your Machine">
+<title>Opal on Your Machine</title>
+
+<para>
+After you have set up Opal, go to  
+<ulink url="http://yourservername/opal2">http://yourservername/opal2</ulink>.
+You should see something similar to the following.
+<screenshot>
+        <graphic fileref="images/opal-home.png" scale=25></graphic>
+</screenshot>
+</para>
+
+
+<para>
+If you click on <command>Dashboard</command>, you should see:
+<screenshot>
+        <graphic fileref="images/opal-summary.png" scale=25></graphic>
+</screenshot>
+</para>
+
+<para>
+On the <command>Server Info </command> page, you will see your Opal server information. 
+On the <command>Usage Statistics</command> page, you can choose date range and 
+the Opal services you want to display
+statistical information.  You will see statistical information on  
+number of invocations per day, daily average execution
+time, number of errors per day and number of jobs currently in execution.  For example, this is a
+graph on Number of invocations per day.
+<screenshot>
+        <graphic fileref="images/opal-stat.png" scale=25></graphic>
+</screenshot>
+</para>
+
+<para>
+On the <command>List of applications</command> page, you will see all your deployed applications.
+<screenshot>
+        <graphic fileref="images/opal-apps.png" scale=25></graphic>
+</screenshot>
+</para>
+
+</section>
+
+<section id="redirect" xreflabel="Hostname to Opal Dashboard Redirection">
+<title>Hostname to Opal Dashboard Redirection</title>
+
+<para>
+In this section, we describe how to redirect
+<ulink url="http://yourservername/opal2/dashboard">http://yourservername/opal2/dashboard</ulink>
+to <command>http://yourservername</command>
+(WARNING: You will lose your original wordpress page and 
+all links on that page.)
+</para>
+
+<para>
+In <filename>/opt/tomcat/webapps/ROOT</filename>, create 
+<filename>index.html</filename> and add the following.
+
+<screen>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv="refresh" content="0; URL=/opal2/dashboard"&gt;
+  &lt;/head&gt;
+&lt;body&gt; &lt;/body&gt;
+&lt;/html&gt;
+</screen>
+</para>
+
+</section>
+
+<section id="addopallink" xreflabel="Adding Opal Dashboard Link to Wordpress">
+<title>Adding Opal Dashboard Link to Wordpress</title>
+
+<para>
+For your later convenience, you might want to add a link to Opal Dashboard
+on the Wordpress page.  Note that the wordpress page is not visible if you
+have chosen to redirect
+<ulink url="http://yourservername/opal2/dashboard">http://yourservername/opal2/dashboard </ulink>
+to <command> http://yourservername </command>
+</para>
+
+<orderedlist>
+<listitem><para>
+Go to the bottom of the wordpress page and click on "Add content 
+to this web site".
+</para></listitem>
+<listitem><para>
+Login with the username "admin" and the root password.
+</para></listitem>
+<listitem><para>
+Click on "Links".
+</para></listitem>
+<listitem><para>
+On the top left corner, click on "Add Link", and add the relevant information.
+</para></listitem>
+</orderedlist>
+
+</section>
+
+<section id="using-opal-cat" xreflabel="Using the Opal-cat">
+<title>Example - Deploying cat as an Opal Service</title>
+
+<para>
+This example assumes that you do everything from <filename>/opt/opal</filename>. 
+All configuration files are located in <filename>/opt/opal/configs</filename>.
+</para>
+
+<para>
+By default, the Opal Roll deploys the cat and date services as a test during installation.  
+See <filename>/opt/opal/configs/deploy.sh</filename> for information on how default services are deployed.
+You may undeploy cat with 
+</para>
+
+<screen>
+cd /opt/opal
+su tomcat -c "ant -f build.xml undeploy -DserviceName=cat"
+</screen>
+
+<para>
+If this example, we will deploy a very simple application as an Opal service,
+which basically executes the UNIX <command>cat</command> command.
+The user will enter a command line argument for <command>cat</command> and chooose an input file.  
+Then, the Opal service will run <command>cat</command> on the input file
+and send the output to <filename>stdout.txt</filename>.
+</para>
+
+<para>
+The configuration file for Cat is installed as <filename>/opt/opal/configs/cat_config.xml</filename>.
+</para>
+<para>Inside the Opal home directory, deploy Cat as an Opal service.</para>
+
+<screen>
+cd /opt/opal
+su tomcat -c "ant -f build.xml deploy -DserviceName=CatOpalService -DappConfig=configs/cat_config.xml"
+</screen>
+
+<para>After Cat is deployed, you should be able to see Cat in the List of Applications.</para>
+
+<para>
+Suppose we want to load the file <filename>1hpx.pqr</filename> and let Cat print out 
+this file with a line number at the beginning of each line.
+</para>
+
+<para>
+On the Submission form for Cat, we will upload <filename>1hpx.pqr</filename> as the input file
+and enter <command>-n 1hpx.pqr</command> at the command line.
+This option prints the line number at the beginning of each line.
+</para>
+
+<para>
+Click on submit, and the output will be stored in <filename>stdout.txt</filename> upon job completion.
+</para>
+
+</section>
+
+<section id="using-opal-ex" xreflabel="Using the Opal-PDB2PQR">
+<title>Example - Deploying PDB2PQR as an Opal Service</title>
+
+<para>
+In this example, we will deploy <ulink url="http://pdb2pqr.sourceforge.net/">PDB2PQR</ulink> as an Opal Application.
+We will assume you run everything from <filename>/opt/opal</filename>.
+All configuration files are located in <filename>/opt/opal/configs</filename>.
+</para>
+
+<para>Here is <filename>pdb2pqr_config.xml</filename>,  the configuration file for PDB2PQR.</para>
+
+<screen>
+&lt;appConfig xmlns="http://nbcr.sdsc.edu/opal/types"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;metadata appName="PDB2PQR"&gt;
+    &lt;usage&gt;&lt;![CDATA[PDB2PQR is a Python software package that automates many of the common tasks of preparing structures for continuum electrostatics calculations, providing a platform-independent utility for converting protein files in PDB format to PQR format]]&gt;&lt;/usage&gt;
+    &lt;info xsd:type="xsd:string"&gt;
+    &lt;![CDATA[
+         python pdb2pqr.py [options] --ff={forcefield} {path} {output-path}
+ 
+         The required arguments are as follows:
+         
+         &lt;forcefield&gt;
+             The forcefield to use -- currently AMBER (AMBER99, Wang J, et al, 2000), CHARMM 
+             (CHARMM27, MacKerell AD Jr, et al, 1998), PARSE (PARSE, Sitkoff D, et al, 1994), 
+             and TYL06 (Tan C, et al, 2006) are supported.
+         &lt;path&gt;
+             The path to the PDB file or an ID to obtain from the PDB archive
+         &lt;output-path&gt;
+             The desired output name of the PQR file to be generated
+         
+         Optional command-line arguments are:
+         
+         --nodebump
+             Do not perform the debumping operation
+         --noopt
+             Do not perform hydrogen bonding network optimization
+         --chain
+             Keep the chain ID in the output PQR file 
+         --assign-only
+             Only assign charges and radii - do not add atoms, debump, or optimize.
+         --clean
+             Do no optimization, atom addition, or parameter assignment, just return the 
+             original PDB file in aligned format.
+         --ffout=&lt;name&gt;
+             Instead of using the standard canonical naming scheme for residue and atom names, 
+             use the names from the given forcefield.
+         --with-ph=&lt;ph&gt;
+             Use PROPKA to calculate pKas and apply them to the molecule given the pH value. 
+             Actual PropKa results will be output to &lt;output-path&gt;.propka.
+         --ligand=&lt;mol2 file&gt;
+             Use the PDB2PKA package to generate parameters for the specific ligand in MOL2 
+             format. MOL2-format ligands can be generated using PRODRG server or from within 
+             some molecular modeling packages
+         --apbs-input
+             Create a template APBS input file based on the generated PQR file.
+         --verbose (-v)
+             Print information to stdout
+         --help (-h)
+             Display the usage information
+         
+         Additional optional command-line arguments from the extensions directory are:
+         
+         --chi
+             Print the per-residue backbone chi angle to {output-path}.chi
+         --phi
+             Print the per-residue backbone phi angle to {output-path}.phi
+         --psi
+             Print the per-residue backbone psi angle to {output-path}.psi
+         --rama
+             Print the per-residue phi and psi angles to {output-path}.rama for Ramachandran plots
+         --hbond
+             Print a list of hydrogen bonds to {output-path}.hbond  
+         
+    ]]&gt;
+    &lt;/info&gt;
+
+    &lt;types&gt; 
+        &lt;!-- list of flags --&gt;
+        &lt;flags&gt;
+            &lt;flag&gt;
+                &lt;id&gt;verbose&lt;/id&gt;
+                &lt;tag&gt;--verbose&lt;/tag&gt;
+                &lt;textDesc&gt;Provide verbose output&lt;/textDesc&gt;
+                &lt;default&gt;true&lt;/default&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;nodebump&lt;/id&gt;
+                &lt;tag&gt;--nodebump&lt;/tag&gt;
+                &lt;textDesc&gt;Do not perform the debumping operation&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;noopt&lt;/id&gt;
+                &lt;tag&gt;--noopt&lt;/tag&gt;
+                &lt;textDesc&gt;Do not perform hydrogen bonding network optimization&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;chain&lt;/id&gt;
+                &lt;tag&gt;--chain&lt;/tag&gt;
+                &lt;textDesc&gt;Keep the chain ID in the output PQR file&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;assign-only&lt;/id&gt;
+                &lt;tag&gt;--assign-only&lt;/tag&gt;
+                &lt;textDesc&gt;Only assign charges and radii - do not add atoms, debump, or optimize&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;clean&lt;/id&gt;
+                &lt;tag&gt;--clean&lt;/tag&gt;
+                &lt;textDesc&gt;Do no optimization, atom addition, or parameter assignment, just return the original PDB file in aligned format&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;apbs-input&lt;/id&gt;
+                &lt;tag&gt;--apbs-input&lt;/tag&gt;
+                &lt;textDesc&gt;Create a template APBS input file based on the generated PQR file&lt;/textDesc&gt;
+            &lt;/flag&gt;
+    
+            &lt;flag&gt;
+                &lt;id&gt;chi&lt;/id&gt;
+                &lt;tag&gt;--chi&lt;/tag&gt;
+                &lt;textDesc&gt;Print the per-residue backbone chi angle to {output-path}.chi&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;phi&lt;/id&gt;
+                &lt;tag&gt;--phi&lt;/tag&gt;
+                &lt;textDesc&gt;Print the per-residue backbone phi angle to {output-path}.phi&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;rama&lt;/id&gt;
+                &lt;tag&gt;--rama&lt;/tag&gt;
+                &lt;textDesc&gt;Print the per-residue phi and psi angles to {output-path}.rama for Ramachandran plots&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+`               &lt;id&gt;psi&lt;/id&gt;
+                &lt;tag&gt;--psi&lt;/tag&gt;
+                &lt;textDesc&gt;Print the per-residue backbone psi angle to {output-path}.psi&lt;/textDesc&gt;
+            &lt;/flag&gt;
+            &lt;flag&gt;
+                &lt;id&gt;hbond&lt;/id&gt;
+                &lt;tag&gt;--hbond&lt;/tag&gt;
+                &lt;textDesc&gt;Print a list of hydrogen bonds to {output-path}.hbond&lt;/textDesc&gt;
+            &lt;/flag&gt;
+        &lt;/flags&gt;
+    
+        &lt;!-- list of tagged parameters --&gt;
+        &lt;taggedParams&gt;
+            &lt;separator&gt;=&lt;/separator&gt;
+            &lt;param&gt;
+                &lt;id&gt;forcefield&lt;/id&gt;
+                &lt;tag&gt;--ff&lt;/tag&gt;
+                &lt;paramType&gt;STRING&lt;/paramType&gt;
+                &lt;required&gt;true&lt;/required&gt;
+                &lt;value&gt;AMBER&lt;/value&gt;
+                &lt;value&gt;CHARMM&lt;/value&gt;
+                &lt;value&gt;PARSE&lt;/value&gt;
+                &lt;value&gt;TYL06&lt;/value&gt;
+                &lt;default&gt;AMBER&lt;/default&gt;
+                &lt;textDesc&gt;The forcefield to use -- currently AMBER, CHARMM, PARSE, and TYL06 are supported.&lt;/textDesc&gt;
+            &lt;/param&gt;
+            &lt;param&gt;
+                &lt;id&gt;ffout&lt;/id&gt;
+                &lt;tag&gt;--ffout&lt;/tag&gt;
+                &lt;paramType&gt;STRING&lt;/paramType&gt;
+                &lt;value&gt;AMBER&lt;/value&gt;
+                &lt;value&gt;CHARMM&lt;/value&gt;
+                &lt;value&gt;PARSE&lt;/value&gt;
+                &lt;value&gt;TYL06&lt;/value&gt;                
+                &lt;textDesc&gt;Instead of using the standard canonical naming scheme for residue and atom, use names from the given forcefield&lt;/textDesc&gt;
+            &lt;/param&gt;
+            &lt;param&gt;
+                &lt;id&gt;with-ph&lt;/id&gt;
+                &lt;tag&gt;--with-ph&lt;/tag&gt;
+                &lt;paramType&gt;STRING&lt;/paramType&gt;
+                &lt;textDesc&gt;Use PROPKA to calculate pKas and apply them to the molecule given the pH value&lt;/textDesc&gt;
+            &lt;/param&gt;
+            &lt;param&gt;
+                &lt;id&gt;ligand&lt;/id&gt;
+                &lt;tag&gt;--ligand&lt;/tag&gt;
+                &lt;paramType&gt;FILE&lt;/paramType&gt;
+                &lt;ioType&gt;OUTPUT&lt;/ioType&gt;
+                &lt;textDesc&gt;Use the PDB2PKA package to generate parameters for the specific ligand in MOL2 format.&lt;/textDesc&gt; 
+            &lt;/param&gt;
+        &lt;/taggedParams&gt;
+    
+        &lt;!-- list of untagged parameters, in order --&gt;
+        &lt;untaggedParams&gt;
+            &lt;param&gt;
+                &lt;id&gt;inFile&lt;/id&gt;
+                &lt;paramType&gt;FILE&lt;/paramType&gt;
+                &lt;ioType&gt;INPUT&lt;/ioType&gt;
+                &lt;!--  &lt;required&gt;true&lt;/required&gt;   --&gt;
+                &lt;textDesc&gt;&lt;![CDATA[ The PDB input file (for testing you can download &lt;a href="http://www.rcsb.org/pdb/files/1a1p.pdb"&gt;http://www.rcsb.org/pdb/files/1a1p.pdb&lt;/a&gt;)]]&gt;&lt;/textDesc&gt;
+            &lt;/param&gt;
+            &lt;param&gt;
+                &lt;id&gt;inId&lt;/id&gt;
+                &lt;paramType&gt;STRING&lt;/paramType&gt;
+                &lt;ioType&gt;INPUT&lt;/ioType&gt;
+                &lt;!--  &lt;required&gt;true&lt;/required&gt;   --&gt;
+                &lt;textDesc&gt;The ID to use to retrive the input file from the PDB archive (for testing use '1a1p')&lt;/textDesc&gt;
+            &lt;/param&gt;
+            &lt;param&gt;
+                &lt;id&gt;output-file&lt;/id&gt;
+                &lt;paramType&gt;FILE&lt;/paramType&gt;
+                &lt;ioType&gt;OUTPUT&lt;/ioType&gt;
+                &lt;required&gt;true&lt;/required&gt;
+                &lt;default&gt;output&lt;/default&gt;
+                &lt;textDesc&gt;The desired output name of the PQR file to be generated&lt;/textDesc&gt;
+            &lt;/param&gt;
+        &lt;/untaggedParams&gt;
+        &lt;groups&gt;
+          &lt;group&gt;
+            &lt;name&gt;inputParam&lt;/name&gt;
+            &lt;elements&gt;inFile inId&lt;/elements&gt;
+            &lt;required&gt;true&lt;/required&gt;
+            &lt;exclusive&gt;true&lt;/exclusive&gt;
+            &lt;textDesc&gt;Input file to be used (choose one of the two options)&lt;/textDesc&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;name&gt;otherRequiredGroup&lt;/name&gt;
+            &lt;elements&gt;forcefield output-file&lt;/elements&gt;
+            &lt;required&gt;true&lt;/required&gt;
+            &lt;textDesc&gt;Other required parameters&lt;/textDesc&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;name&gt;ffoutGroup&lt;/name&gt;
+            &lt;elements&gt;ffout&lt;/elements&gt;
+            &lt;required&gt;false&lt;/required&gt;
+            &lt;textDesc&gt;Output naming schema to be used&lt;/textDesc&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;name&gt;perResidueGroup&lt;/name&gt;
+            &lt;elements&gt;chi phi psi rama hbond&lt;/elements&gt;
+            &lt;textDesc&gt;Additional optional command-line arguments from the extensions directory are&lt;/textDesc&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;name&gt;otherParamGroup&lt;/name&gt;
+            &lt;elements&gt;with-ph ligand verbose nodebump noopt chain assign-only clean apbs-input&lt;/elements&gt;
+            &lt;required&gt;false&lt;/required&gt;
+            &lt;textDesc&gt;Other parameters&lt;/textDesc&gt;
+          &lt;/group&gt;
+        &lt;/groups&gt;
+    &lt;/types&gt;
+
+  &lt;/metadata&gt;
+  &lt;binaryLocation&gt;/home/clem/wake_up.sh&lt;/binaryLocation&gt;
+  &lt;defaultArgs&gt;&lt;/defaultArgs&gt;
+  &lt;parallel&gt;false&lt;/parallel&gt;
+&lt;/appConfig&gt;
+</screen>
+
+<orderedlist>
+  <listitem><para>
+  Install PDB2PQR if you have not done so.  If your cluster has compute nodes, then make
+  sure PDB2PQR is installed on the compute nodes as well.
+  </para></listitem>
+  <listitem><para>
+  If your cluster has no compute nodes, then you should configure SGE to use 
+  the frontend as a compute node.
+  </para></listitem>
+  <listitem><para>
+  Go to <filename>/opt/opal/configs</filename>.  Note there is already a sample Opal configuration file for
+  PDB2PQR called <filename>pdb2pqr_config.xml</filename>.  At the bottom of this page, change
+  the <command>binaryLocation</command> of <filename>pdb2pqr.py</filename> to its location on
+  your machine.
+  </para></listitem>
+  <listitem><para>
+  Deploy the servikce:              
+<screen>
+cd /opt/opal
+su tomcat -c "ant -f build.xml deploy -DserviceName=Pdb2pqrOpalService -DappConfig=configs/pdb2pqr_configs.xml"</screen>
+  </para></listitem>
+  <listitem><para>
+  Now go to <ulink url="http://yourservername:8080/opal2/dashboard?command=serviceList">http://yourserver:8080/opal2/dashboard?command=serviceList</ulink>.
+  You should be able to see the newly added PDB2PQR Opal service in the applications services listing.
+  <screenshot>
+        <graphic fileref="images/opal-listpdb2pqr.png" scale=25></graphic>
+  </screenshot>
+  </para></listitem>
+  <listitem><para>
+  Click on PDB2PQR, and you should see the submission form (showing part of the form here):
+  <screenshot>
+        <graphic fileref="images/opal-pdb2pqr.png" scale=25></graphic>
+  </screenshot>
+  </para></listitem>
+  <listitem><para>
+  Check 'The ID' radio button and type '1a1p' in the text field next to it to retrive 
+  the input file from the PDB archive.
+  Then go to the botto of the page and click <command>Submit</command>.
+  </para></listitem>
+  <listitem><para>
+  You should now see the status of your submission.  When execution is compte, the status will change,
+  and you should get a link to the output of your submission.
+  </para></listitem>
+</orderedlist>
+
+<para>
+Make sure you run as "tomcat" when deploying Opal services.
+</para>
+
+</section>
+
+
+</chapter>

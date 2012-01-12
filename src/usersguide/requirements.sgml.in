@@ -1,0 +1,36 @@
+<chapter id="requirements" xreflabel="Requirements">
+<title>Requirements</title>
+
+<para>
+The Opal Roll is for use with Rocks @ROCKS_VERSION@.
+</para>
+
+<para>
+You must install the following before installing the Opal roll.
+</para>
+
+<itemizedlist>
+<listitem><para>
+sge roll (NOTE: the sge roll can only be installed 
+during the front-end installation.  Most likely the sge roll is already installed on your Rocks system)
+</para></listitem>
+
+<listitem><para>
+java (Java is already installed on your Rocks system) 
+</para></listitem>
+
+</itemizedlist>
+
+<para>
+sge roll can be downloaded from
+<ulink url="http://www.rocksclusters.org/wordpress/?page_id=80">the Rocks download page</ulink>.
+</para>
+
+<para>
+Please see the 
+<ulink url="http://yourservername/roll-documentation/opal/@ROCKS_VERSION@/refguide"> Opal Toolkit Reference Guide</ulink> 
+for installation requirements of Opal server and clients from the source.
+</para>
+
+</chapter>
+

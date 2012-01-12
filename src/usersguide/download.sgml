@@ -1,0 +1,16 @@
+<chapter id="Download" xreflabel="Download Opal">
+<title>Download </title>
+
+<para>
+<command>Opal rolls</command> for various rocks versions can be found
+<ulink url="http://nbcr.net/software/downloads/rolls/">here</ulink>.
+We suggest to download the most recent version.
+</para>
+
+<para>
+<command>Opal source</command> is available in Java, Perl, and Python from
+<ulink url="http://sourceforge.net/project/showfiles.php?group_id=211778">
+the SourceForge Opal Toolkit Download page</ulink>.
+</para>
+
+</chapter>

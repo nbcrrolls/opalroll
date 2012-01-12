@@ -1,0 +1,15 @@
+<preface id="preface" xreflabel="preface">
+<title>Preface</title>
+
+<para>
+This documentation is used for Opal version @OPAL_VERSION@.
+</para>
+
+<para>
+Please visit the <ulink url="http://nbcr.net/software/opal/">
+Official Opal Toolkit page</ulink> and
+the <ulink url="http://sourceforge.net/projects/opaltoolkit/">
+SourceForge Opal Toolkit website</ulink> to learn more about Opal.
+</para>
+
+</preface>

@@ -1,0 +1,46 @@
+<chapter id="introduction" xreflabel="Introduction">
+
+<title>Introduction to Opal Toolkit</title>
+
+<simplesect>
+<title>About Opal Toolkit</title>
+
+<para>
+The Grid-based infrastructure enables large-scale scientific applications to be run on distributed resources and coupled in 
+innovative ways. However, in practice, Grid resources are not very easy to use for the end-users who have to learn 
+how to generate security credentials, stage inputs and outputs, access Grid-based schedulers, and install complex client software. 
+</para>
+<para>
+There is an imminent need to provide transparent access to these resources so that the end-users are shielded from the 
+complicated details, and free to concentrate on their domain science. Scientific applications wrapped as Web services 
+alleviate some of these problems by hiding the complexities of the back-end security and computational infrastructure, 
+only exposing a simple SOAP API that can be accessed programmatically by application-specific user interfaces. 
+</para>
+<para>
+Writing the application services that access Grid resources can be quite complicated, especially if it has to be 
+replicated for every application. Towards that end, we have implemented Opal, which is a toolkit for wrapping scientific 
+applications as Web services in a matter of hours, providing features such as scheduling, standards-based Grid security and 
+data management in an easy-to-use and configurable manner. 
+</para>
+<para>
+Please see <ulink url="http://opal.nbcr.net">Opal web site</ulink> for more info. 
+</para>
+</simplesect>
+
+<simplesect>
+<title>Why Opal?</title>
+
+<itemizedlist>
+<listitem><para>Opal enables deployment of scientific applications as Web services without having to write a single line of Web services code</para></listitem>
+<listitem><para>Opal exposes the scientific functionality through a generic Web services API (via a standard WSDL)</para></listitem>
+<listitem><para>Opal hides the complexity involved in the submission of computational jobs to Grid resources</para></listitem>
+<listitem><para>Opal manages user data, which includes creation of working directories, input and output data staging, and persistent storage for job information and metadata</para></listitem>
+<listitem><para>Opal services can be configured with GSI-based security for authentication and authorization purposes</para></listitem>
+<listitem><para>Opal services can be accessed from a multitude of languages (Java, Python, Perl, JavaScript) and plaforms (Windows, various Unix flavors)
+
+</para></listitem>
+</itemizedlist>
+
+</simplesect>
+
+</chapter>

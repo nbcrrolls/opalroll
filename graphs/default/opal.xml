@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="no"?>
+
+<graph>
+
+	<description>
+
+	Opal
+
+	</description>
+
+	<copyright>
+        Copyright (c) 2000 - 2008 The Regents of the University of California.
+        All rights reserved.
+        </copyright>
+
+	<changelog>
+	</changelog>
+
+        <edge from="server" to="opal"/>
+        <edge from="ec2-client" to="opal"/>
+
+</graph>
+
+
