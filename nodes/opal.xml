@@ -38,8 +38,8 @@ mkpasswd -l 10 -s 0 2> /dev/null
 OPAL_DB_PASS=`cat /opt/opal/etc/opal.pass`
 echo -en GRANT ALL PRIVILEGES ON opaldb.* TO 'opal'@'localhost' IDENTIFIED BY \'$OPAL_DB_PASS\' \; | /usr/bin/mysql
 
-mv /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsql
-mv /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
+cp /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsql
+cp /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
 sed -i "s/opal_mysql_passwd/$OPAL_DB_PASS/" /opt/opal/etc/hibernate-opal.cfg.xml
 chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
 
@@ -81,6 +81,14 @@ worker.worker1.host=localhost
 worker.worker1.port=8009
 </file>
 
+
+<file name="/etc/httpd/conf.d/rocks.conf" mode="append">
+
+JkMount /opal* worker1
+JkMount /app* worker1
+
+</file>
+
 sed -i 's/AddHandler imap-file map/#AddHandler imap-file map/g' /etc/httpd/conf/httpd.conf
 sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/httpd.conf
 
@@ -115,7 +123,7 @@ cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
 mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
 
 <file name="/opt/opal/etc/opal.properties" perm="0644">
-tomcat.url=http://&Kickstart_PublicHostname;:8080
+tomcat.url=http://&Kickstart_PublicHostname;
 num.procs=2
 mpi.run=/opt/openmpi/bin/mpirun
 working.dir=opal-jobs

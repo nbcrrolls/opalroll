@@ -1,13 +1,11 @@
-# $Id: Makefile,v 1.1 2012/01/12 20:39:57 clem Exp $
+# $Id: Makefile,v 1.2 2012/01/13 03:47:45 clem Exp $
 #
 # @Copyright@
 # @Copyright@
 #
 # $Log: Makefile,v $
-# Revision 1.1  2012/01/12 20:39:57  clem
-# First version of the nbcr-opal roll.
-# Now it uses the mod_jk by default.
-# The roll has been already modified from the nbcr.
+# Revision 1.2  2012/01/13 03:47:45  clem
+# First round of fixes
 #
 #
 
