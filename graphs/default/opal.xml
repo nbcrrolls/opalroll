@@ -19,6 +19,11 @@
         <edge from="server" to="opal"/>
         <edge from="ec2-client" to="opal"/>
 
+        <order head="server">
+                <tail>opal</tail>
+        </order>
+
+
 </graph>
 
 

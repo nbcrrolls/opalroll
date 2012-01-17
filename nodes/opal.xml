@@ -23,7 +23,9 @@
 
 <post>
 
-<!-- Set database access -->
+LOGFILE=/tmp/opal-install.log
+
+<!-- Setting up database -->
 if [ ! -f /var/lock/subsys/mysqld ]; then
     /etc/init.d/mysqld start
 fi
@@ -36,12 +38,15 @@ mkpasswd -l 10 -s 0 2> /dev/null
 </file>
 
 OPAL_DB_PASS=`cat /opt/opal/etc/opal.pass`
-echo -en GRANT ALL PRIVILEGES ON opaldb.* TO 'opal'@'localhost' IDENTIFIED BY \'$OPAL_DB_PASS\' \; | /usr/bin/mysql
+/bin/echo -en GRANT ALL PRIVILEGES ON opaldb.* TO 'opal'@'localhost' IDENTIFIED BY \'$OPAL_DB_PASS\' \; | /usr/bin/mysql
 
 cp /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsql
 cp /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
 sed -i "s/opal_mysql_passwd/$OPAL_DB_PASS/" /opt/opal/etc/hibernate-opal.cfg.xml
 chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
+/bin/echo "DB setup complited" &gt; $LOGFILE
+
+<!--       setting up tomcat -->
 
 <!-- add tomcat user -->
 /usr/sbin/useradd -M -u412 -c "Tomcat" -d /opt/tomcat tomcat
@@ -50,7 +55,6 @@ chown -R tomcat.tomcat /opt/tomcat-*
 /opt/rocks/bin/rocks sync users
 
 <!-- configure mod_jk -->
-
 <file name="/etc/httpd/conf.d/mod_jk.conf">
 LoadModule jk_module modules/mod_jk.so
 JkWorkersFile /etc/httpd/conf/workers.properties
@@ -100,24 +104,22 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 /etc/init.d/tomcat-opal start
 /etc/init.d/httpd restart
 
-<!-- check for tomcat -->
-export CATALINA_HOME=/opt/tomcat
-if ! test -d $CATALINA_HOME; then \
-    echo "Error: Tomcat is not installed in $CATALINA_HOME or CATALINA_HOME is not set correctly"; \
-    exit; \
-fi
-
 <!-- Make NFS shared directory for opal jobs -->
 mkdir -m0755 -p /export/opal/opal-jobs 
 chown -R tomcat:tomcat /export/opal
-echo "opal &Kickstart_PrivateHostname;:/export/&amp;" &gt;&gt; /etc/auto.share
-rocks sync config
-rocks sync users
+/bin/echo "opal &Kickstart_PrivateHostname;:/export/&amp;" &gt;&gt; /etc/auto.share
+/opt/rocks/bin/rocks sync config
+/opt/rocks/bin/rocks sync users
 /etc/init.d/autofs reload
 
 ls /share/opal/opal/opal-jobs
 ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
 cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
+
+/bin/echo "Tomcat setup completed sucessfully " &gt;&gt; $LOGFILE
+
+
+
 
 <!-- update opal.properties file -->
 mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
@@ -164,13 +166,14 @@ fi
 sed -i "s/num.procs=2/num.procs=$proc_count/" /opt/opal/etc/opal.properties
 
 <!-- Install opal -->
-
+echo Installing opal &gt;&gt; $LOGFILE
 chown -R tomcat:tomcat /opt/opal
 cd /opt/opal
 . /etc/profile.d/java.sh
 . /etc/profile.d/sge-binaries.sh
 
-su tomcat -c "ant install"; 
+echo "running install opal " &gt;&gt; $FILELOG
+/bin/su tomcat -c "/opt/rocks/bin/ant install &gt; install.log" &amp;&gt; /tmp/install-opal.ant.log
 
 <!-- Enable directory listing for job output -->
 FILE=$CATALINA_HOME/conf/web.xml
@@ -179,6 +182,7 @@ num=`expr $pre + 1`
 sed -i "${num} s/false/true/" $FILE
 
 <!-- add cron entry to remove old jobs -->
+
 <file name="/etc/cron.daily/opal-job-cleanup" perms="0755">
 #!/bin/bash
 
@@ -204,13 +208,15 @@ sleep 10
 sleep 10
 
 <!-- update www docs with correct hostname -->
-sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/5.3/*.html
+sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/5.4.3/*.html
 
 <!-- add link to opal reference guide -->
-ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.3/refguide
+ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 
 <!-- Deploy possible installed applications -->
-su tomcat -c "/opt/opal/configs/deploy.sh" 
+/bin/su tomcat -c "/opt/opal/configs/deploy.sh" 
+
+echo "Opal setup completed sucesfully" &gt;&gt; $LOGFILE
 
 </post>
 </kickstart>

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.2 2012/01/13 03:47:45 clem Exp $
+# $Id: Makefile,v 1.3 2012/01/17 03:38:47 clem Exp $
 #
 # @Copyright@
 # 
@@ -53,52 +53,6 @@
 # 
 # @Copyright@
 #
-# $Log: Makefile,v $
-# Revision 1.2  2012/01/13 03:47:45  clem
-# First round of fixes
-#
-# Revision 1.14  2009/05/19 21:16:28  anoop
-# Does not build without explicit JAVA_HOME setting
-#
-# Revision 1.13  2009/05/01 19:07:20  mjk
-# chimi con queso
-#
-# Revision 1.12  2008/10/18 00:56:12  mjk
-# copyright 5.1
-#
-# Revision 1.11  2008/08/29 18:22:57  mjk
-# can build outside of tree
-#
-# Revision 1.10  2008/03/06 23:41:55  mjk
-# copyright storm on
-#
-# Revision 1.9  2007/12/06 23:13:23  abrust
-# put symlink back to tomcat-5.5
-#
-# Revision 1.8  2007/12/06 06:22:25  abrust
-# made 6.0.14 default tomcat instance
-#
-# Revision 1.7  2007/11/28 02:02:01  abrust
-# updated jboss to 4.2.1
-# updated tomcat to 6.0.14 * although default is still 5.5
-#
-# Revision 1.6  2007/06/23 04:03:48  mjk
-# mars hill copyright
-#
-# Revision 1.5  2007/01/09 23:45:36  mjk
-# still tomcating
-#
-# Revision 1.4  2007/01/09 20:41:11  mjk
-# more tomcat fixes
-#
-# Revision 1.3  2007/01/09 20:21:20  mjk
-# more tomcats means more fun
-#
-# Revision 1.2  2006/10/10 23:49:16  mjk
-# tomcat done
-#
-# Revision 1.1  2006/10/10 22:36:58  mjk
-# *** empty log message ***
 #
 
 PKGROOT = /opt/tomcat

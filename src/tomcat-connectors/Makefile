@@ -1,11 +1,8 @@
-# $Id: Makefile,v 1.2 2012/01/13 03:47:45 clem Exp $
+# $Id: Makefile,v 1.3 2012/01/17 03:38:47 clem Exp $
 #
 # @Copyright@
 # @Copyright@
 #
-# $Log: Makefile,v $
-# Revision 1.2  2012/01/13 03:47:45  clem
-# First round of fixes
 #
 #
 
