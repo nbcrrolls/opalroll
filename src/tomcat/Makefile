@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.3 2012/01/17 03:38:47 clem Exp $
+# $Id: Makefile,v 1.4 2012/01/18 18:22:02 nadya Exp $
 #
 # @Copyright@
 # 
@@ -63,9 +63,6 @@ include Rules.mk
 
 
 install:: install_5_5 
-	mkdir -p $(ROOT)/etc/rc.d/init.d
-	mkdir -p $(ROOT)/etc/sysconfig/tomcat
-	install -m755 tomcat-opal $(ROOT)/etc/rc.d/init.d/tomcat-opal
 
 
 build: build_5_5 
