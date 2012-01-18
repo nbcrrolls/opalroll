@@ -10,6 +10,7 @@
 # Source init scripts
 . /etc/profile.d/java.sh
 . /etc/profile.d/sge-binaries.sh
+. /etc/profile.d/rocks-condor.sh
 
 if [ -x /etc/sysconfig/tomcat/config ]; then
 	. /etc/sysconfig/tomcat/config
