@@ -61,7 +61,9 @@ build:
 
 install::
 	mkdir -p $(ROOT)/etc/profile.d
-	$(INSTALL) -m755  pdb2pqr.*sh  $(ROOT)/etc/profile.d
+	mkdir -p $(ROOT)/etc/rc.d/init.d
+	$(INSTALL) -m755  opal.*sh  $(ROOT)/etc/profile.d
+	$(INSTALL) -m755 tomcat-opal $(ROOT)/etc/rc.d/init.d/
 
 clean::
 	rm -f $(NAME).spec.in
