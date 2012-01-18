@@ -1,3 +1,3 @@
-NAME = rocks-pdb2pqr
+NAME = rocks-opal
 RELEASE = 0
 
