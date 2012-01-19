@@ -25,6 +25,9 @@
 
 LOGFILE=/tmp/opal-install.log
 
+#fixing java 64 bit on this machine
+/usr/bin/yum reinstall jdk.x86_64
+
 <!-- Setting up database -->
 if [ ! -f /var/lock/subsys/mysqld ]; then
     /etc/init.d/mysqld start
@@ -173,6 +176,11 @@ if test -z /opt/gridengine; then
     proc_count=`cat /proc/cpuinfo | grep "processor" | wc -l`
     sed -i "s/num.procs=8/num.procs=$proc_count/" /opt/opal/etc/opal.properties
     sed -i "s/edu.sdsc.nbcr.opal.manager.DRMAAJobManager/edu.sdsc.nbcr.opal.manager.ForkJobManager/" /opt/opal/etc/opal.properties
+fi
+
+#this replace the libdrmaa with JNI api compiled in
+if [ `rocks report version` == "5.4.3" ]; then 
+    cp -pf  /opt/opal/lib/libdrmaa.so.1.0 /opt/gridengine/lib/lx26-amd64/libdrmaa.so.1.0
 fi
 
 <!-- Install opal -->

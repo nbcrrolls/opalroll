@@ -64,6 +64,9 @@ install::
 	mkdir -p $(ROOT)/etc/rc.d/init.d
 	$(INSTALL) -m755  opal.*sh  $(ROOT)/etc/profile.d
 	$(INSTALL) -m755 tomcat-opal $(ROOT)/etc/rc.d/init.d/
+	#sge drmaa libraries with jni enabled for rocks 5.4.3
+	mkdir -p $(ROOT)/opt/opal/lib/
+	$(INSTALL) -m755 libdrmaa.so.1.0 $(ROOT)/opt/opal/lib/
 
 clean::
 	rm -f $(NAME).spec.in
