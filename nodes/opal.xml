@@ -30,6 +30,7 @@ if [ ! -f /var/lock/subsys/mysqld ]; then
     /etc/init.d/mysqld start
 fi
 
+/sbin/chkconfig mysqld on
 /usr/bin/mysqladmin create opaldb
 <file name="/opt/opal/etc/opal.pass" perms="0600">
 <eval>
@@ -52,7 +53,6 @@ chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
 /usr/sbin/useradd -M -u412 -c "Tomcat" -d /opt/tomcat tomcat
 chown -R tomcat.tomcat /opt/tomcat
 chown -R tomcat.tomcat /opt/tomcat-*
-/opt/rocks/bin/rocks sync users
 
 <!-- configure mod_jk -->
 <file name="/etc/httpd/conf.d/mod_jk.conf">
@@ -92,11 +92,9 @@ JkMount /opal* worker1
 JkMount /app* worker1
 
 </file>
-
 sed -i 's/AddHandler imap-file map/#AddHandler imap-file map/g' /etc/httpd/conf/httpd.conf
 sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/httpd.conf
 
-#sed 's/Include conf.d\/rocks.conf//g' /etc/httpd/conf/httpd.conf
 
 
 <!-- configure and turn on tomcat -->
@@ -107,12 +105,15 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 <!-- Make NFS shared directory for opal jobs -->
 mkdir -m0755 -p /export/opal/opal-jobs 
 chown -R tomcat:tomcat /export/opal
-/bin/echo "opal &Kickstart_PrivateHostname;:/export/&amp;" &gt;&gt; /etc/auto.share
+<file name="/etc/auto.share" mode="append">
+opal &Kickstart_PrivateHostname;:/export/&amp;
+</file>
 /opt/rocks/bin/rocks sync config
 /opt/rocks/bin/rocks sync users
 /etc/init.d/autofs reload
 
-ls /share/opal/opal/opal-jobs
+CATALINA_HOME=/opt/tomcat
+ls /share/opal/opal-jobs
 ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
 cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
 
@@ -126,7 +127,7 @@ mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
 
 <file name="/opt/opal/etc/opal.properties" perm="0644">
 tomcat.url=http://&Kickstart_PublicHostname;
-num.procs=2
+num.procs=8
 mpi.run=/opt/openmpi/bin/mpirun
 working.dir=opal-jobs
 mail.enable=true
@@ -154,26 +155,35 @@ opal.ip.whitelist=66.102.7.105, 127.0.0.1
 </file>
 
 <!-- Set correct number of processors for SGE -->
-proc_count=0
-if test -z /opt/gridengine; then 
-    proc_count=`cat /proc/cpuinfo | grep "processor" | wc -l` 
-else
-   procs=`qstat -f | grep BIP | awk '{print $3}' | cut -d'/' -f3`
-   for i in $procs; do 
-       proc_count=$(($proc_count + $i))
-   done
+#this is not gonna work on a post install script
+#proc_count=0
+#if test -z /opt/gridengine; then 
+#    proc_count=`cat /proc/cpuinfo | grep "processor" | wc -l` 
+#else
+#   procs=`qstat -f | grep BIP | awk '{print $3}' | cut -d'/' -f3`
+#   for i in $procs; do 
+#       proc_count=$(($proc_count + $i))
+#   done
+#fi
+#sed -i "s/num.procs=2/num.procs=$proc_count/" /opt/opal/etc/opal.properties
+
+if test -z /opt/gridengine; then
+    #no sge installed 
+    #lets use fork
+    proc_count=`cat /proc/cpuinfo | grep "processor" | wc -l`
+    sed -i "s/num.procs=8/num.procs=$proc_count/" /opt/opal/etc/opal.properties
+    sed -i "s/edu.sdsc.nbcr.opal.manager.DRMAAJobManager/edu.sdsc.nbcr.opal.manager.ForkJobManager/" /opt/opal/etc/opal.properties
 fi
-sed -i "s/num.procs=2/num.procs=$proc_count/" /opt/opal/etc/opal.properties
 
 <!-- Install opal -->
 echo Installing opal &gt;&gt; $LOGFILE
 chown -R tomcat:tomcat /opt/opal
 cd /opt/opal
-. /etc/profile.d/java.sh
-. /etc/profile.d/sge-binaries.sh
+export JAVA_HOME=/usr/java/latest
+export PATH=$JAVA_HOME/bin:$PATH
 
-echo "running install opal " &gt;&gt; $FILELOG
-/bin/su tomcat -c "/opt/rocks/bin/ant install &gt; install.log" &amp;&gt; /tmp/install-opal.ant.log
+echo "running install opal " &gt;&gt; $LOGFILE
+/bin/su tomcat -c "/opt/rocks/bin/ant install &gt; /opt/opal/install.log" &gt;&gt; $LOGFILE
 
 <!-- Enable directory listing for job output -->
 FILE=$CATALINA_HOME/conf/web.xml
@@ -190,7 +200,7 @@ sed -i "${num} s/false/true/" $FILE
 
 CATALINA_HOME=/opt/tomcat
 # default number of days to keep job direcotry 
-n=4
+n=7
 
 #cd $CATALINA_HOME/webapps/opal-jobs
 cd $CATALINA_HOME/webapps/ROOT
@@ -214,7 +224,7 @@ sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-docume
 ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 
 <!-- Deploy possible installed applications -->
-/bin/su tomcat -c "/opt/opal/configs/deploy.sh" 
+/bin/su tomcat -c "/opt/opal/configs/deploy.sh" &amp;&gt; /tmp/opal-deploy.log
 
 echo "Opal setup completed sucesfully" &gt;&gt; $LOGFILE
 

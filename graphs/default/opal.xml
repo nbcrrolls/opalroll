@@ -18,11 +18,14 @@
 
         <edge from="server" to="opal"/>
         <edge from="ec2-client" to="opal"/>
-
-        <order head="server">
+        
+        <order head="autofs-server">
                 <tail>opal</tail>
         </order>
 
+        <order head="sge-base">
+                <tail>opal</tail>
+        </order>
 
 </graph>
 

@@ -9,8 +9,14 @@
 
 # Source init scripts
 . /etc/profile.d/java.sh
-. /etc/profile.d/sge-binaries.sh
-. /etc/profile.d/rocks-condor.sh
+
+if [ -f /etc/profile.d/sge-binaries.sh ]; then
+	. /etc/profile.d/sge-binaries.sh
+fi
+if [ -f /etc/profile.d/rocks-condor.sh ]; then 
+	. /etc/profile.d/rocks-condor.sh
+fi
+
 
 if [ -x /etc/sysconfig/tomcat/config ]; then
 	. /etc/sysconfig/tomcat/config
