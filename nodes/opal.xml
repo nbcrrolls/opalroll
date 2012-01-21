@@ -25,8 +25,16 @@
 
 LOGFILE=/tmp/opal-install.log
 
-#fixing java 64 bit on this machine
-/usr/bin/yum reinstall jdk.x86_64
+
+#Installing java 64 bit
+#needed by the libdrmaa
+if [ `/opt/rocks/bin/rocks report version` == "5.4.3" ]; then
+	java -version &amp;&gt; /tmp/testjavabefore
+	rpm -ev --nodeps jdk.i586
+	rpm -ev --nodeps jdk.x86_64
+	rpm  -Uvh --force --nodeps /export/rocks/install/rolls/base/5.4.3/x86_64/RedHat/RPMS/jdk-6u26-linux.x86_64.rpm &amp;&gt; /tmp/rpminstall.log
+	java -version &amp;&gt; /tmp/testjavaafter
+fi
 
 <!-- Setting up database -->
 if [ ! -f /var/lock/subsys/mysqld ]; then
@@ -48,7 +56,7 @@ cp /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsq
 cp /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
 sed -i "s/opal_mysql_passwd/$OPAL_DB_PASS/" /opt/opal/etc/hibernate-opal.cfg.xml
 chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
-/bin/echo "DB setup complited" &gt; $LOGFILE
+/bin/echo "DB setup complited" &gt;&gt; $LOGFILE
 
 <!--       setting up tomcat -->
 
@@ -179,7 +187,8 @@ if test -z /opt/gridengine; then
 fi
 
 #this replace the libdrmaa with JNI api compiled in
-if [ `rocks report version` == "5.4.3" ]; then 
+if [ `/opt/rocks/bin/rocks report version` == "5.4.3" ]; then 
+    echo Replacing libdrmaa &gt;&gt; $LOGFILE
     cp -pf  /opt/opal/lib/libdrmaa.so.1.0 /opt/gridengine/lib/lx26-amd64/libdrmaa.so.1.0
 fi
 
