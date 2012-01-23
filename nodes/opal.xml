@@ -61,9 +61,25 @@ chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
 <!--       setting up tomcat -->
 
 <!-- add tomcat user -->
-/usr/sbin/useradd -M -u412 -c "Tomcat" -d /opt/tomcat tomcat
+/usr/sbin/useradd -m -c "Tomcat" tomcat
 chown -R tomcat.tomcat /opt/tomcat
 chown -R tomcat.tomcat /opt/tomcat-*
+<file name="/tmp/create-sshkey.sh" perm="0755">
+#no password prompt
+ssh-keygen -t rsa -f /export/home/tomcat/.ssh/id_rsa -v -N "" -q
+
+
+# Copy public key to authorized_keys file.
+cat /export/home/tomcat/.ssh/id_rsa.pub >> /export/home/tomcat/.ssh/authorized_keys
+
+chmod 600 /export/home/tomcat/.ssh/authorized_keys
+chmod g-w /export/home/tomcat
+</file>
+/opt/rocks/bin/rocks sync users
+#set up shared keys
+/usr/bin/sudo -u tomcat /tmp/create-sshkey.sh
+#rm /tmp/create-sshkey.sh
+
 
 <!-- configure mod_jk -->
 <file name="/etc/httpd/conf.d/mod_jk.conf">
