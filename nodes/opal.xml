@@ -21,7 +21,7 @@
         <package>rocks-opal</package>
         <package>roll-opal-usersguide</package>
 
-<post>
+<post os="linux" arch="x86_64">
 
 LOGFILE=/tmp/opal-install.log
 
@@ -78,7 +78,7 @@ chmod g-w /export/home/tomcat
 /opt/rocks/bin/rocks sync users
 #set up shared keys
 /usr/bin/sudo -u tomcat /tmp/create-sshkey.sh
-#rm /tmp/create-sshkey.sh
+rm /tmp/create-sshkey.sh
 
 
 <!-- configure mod_jk -->
