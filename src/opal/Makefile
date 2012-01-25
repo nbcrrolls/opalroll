@@ -65,11 +65,12 @@ OPALDIST = $(NAME)-ws-$(VERSION)
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mkdir -p $(ROOT)/export/apps/bin
-	install -m755 $(OPALDIST)/configs/run_autodock.py $(ROOT)/export/apps/bin
+	mkdir -p $(ROOT)/$(PKGROOT)/deployed
 	install -m755 cat.sh $(ROOT)/export/apps/bin
-	rm $(OPALDIST)/configs/run_autodock.py
 	cp -r $(OPALDIST)/* $(ROOT)/$(PKGROOT)
-	install -m755 deploy.sh $(ROOT)/$(PKGROOT)/configs
+	install -m755 deploy.sh $(ROOT)/$(PKGROOT)/deployed
+	cp $(ROOT)/$(PKGROOT)/configs/cat_config.xml $(ROOT)/$(PKGROOT)/deployed
+	cp $(ROOT)/$(PKGROOT)/configs/date_config.xml $(ROOT)/$(PKGROOT)/deployed
 
 build: 
 	tar -zxvf $(OPALDIST).tar.gz 

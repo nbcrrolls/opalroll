@@ -2,7 +2,7 @@
 
 ANT=/opt/rocks/bin/ant
 OPALXML=/opt/opal/build.xml
-OPALCONFIG=/opt/opal/configs
+OPALCONFIG=/opt/opal/deployed
 
 # deploy test applications
 $ANT -f $OPALXML deploy -DserviceName=cat   -DappConfig=$OPALCONFIG/cat_config.xml

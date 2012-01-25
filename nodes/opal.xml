@@ -257,7 +257,7 @@ sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-docume
 ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 
 <!-- Deploy possible installed applications -->
-/bin/su tomcat -c "/opt/opal/configs/deploy.sh" &amp;&gt; /tmp/opal-deploy.log
+/bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &amp;&gt; /tmp/opal-deploy.log
 
 echo "Opal setup completed sucesfully" &gt;&gt; $LOGFILE
 
