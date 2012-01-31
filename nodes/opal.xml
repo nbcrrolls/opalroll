@@ -61,6 +61,7 @@ chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
 <!--       setting up tomcat -->
 
 <!-- add tomcat user -->
+/bin/mkdir -p /export/home
 /usr/sbin/useradd -m -c "Tomcat" tomcat
 chown -R tomcat.tomcat /opt/tomcat
 chown -R tomcat.tomcat /opt/tomcat-*
