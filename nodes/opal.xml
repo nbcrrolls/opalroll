@@ -67,6 +67,7 @@ chown -R tomcat.tomcat /opt/tomcat
 chown -R tomcat.tomcat /opt/tomcat-*
 <file name="/tmp/create-sshkey.sh" perm="0755">
 #no password prompt
+mkdir /export/home/tomcat/.ssh
 ssh-keygen -t rsa -f /export/home/tomcat/.ssh/id_rsa -v -N "" -q
 
 
@@ -74,8 +75,10 @@ ssh-keygen -t rsa -f /export/home/tomcat/.ssh/id_rsa -v -N "" -q
 cat /export/home/tomcat/.ssh/id_rsa.pub >> /export/home/tomcat/.ssh/authorized_keys
 
 chmod 600 /export/home/tomcat/.ssh/authorized_keys
+chmod 700 /export/home/tomcat/.ssh
 chmod g-w /export/home/tomcat
 </file>
+
 /opt/rocks/bin/rocks sync users
 #set up shared keys
 /usr/bin/sudo -u tomcat /tmp/create-sshkey.sh
@@ -141,7 +144,7 @@ opal &Kickstart_PrivateHostname;:/export/&amp;
 /etc/init.d/autofs reload
 
 CATALINA_HOME=/opt/tomcat
-ls /share/opal/opal-jobs
+#ls /share/opal/opal-jobs
 ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
 cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
 
