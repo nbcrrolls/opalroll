@@ -81,9 +81,8 @@ chmod g-w /export/home/tomcat
 
 /opt/rocks/bin/rocks sync users
 #set up shared keys
-/usr/bin/sudo -u tomcat /tmp/create-sshkey.sh
+/usr/bin/sudo -u tomcat bash /tmp/create-sshkey.sh
 rm /tmp/create-sshkey.sh
-
 
 <!-- configure mod_jk -->
 <file name="/etc/httpd/conf.d/mod_jk.conf">
@@ -130,8 +129,6 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 
 <!-- configure and turn on tomcat -->
 /sbin/chkconfig --add tomcat-opal 
-/etc/init.d/tomcat-opal start
-/etc/init.d/httpd restart
 
 <!-- Make NFS shared directory for opal jobs -->
 mkdir -m0755 -p /export/opal/opal-jobs 
@@ -139,9 +136,6 @@ chown -R tomcat:tomcat /export/opal
 <file name="/etc/auto.share" mode="append">
 opal &Kickstart_PrivateHostname;:/export/&amp;
 </file>
-/opt/rocks/bin/rocks sync config
-/opt/rocks/bin/rocks sync users
-/etc/init.d/autofs reload
 
 CATALINA_HOME=/opt/tomcat
 #ls /share/opal/opal-jobs
@@ -249,8 +243,7 @@ done
 </file>
 
 <!-- turn on tomcat -->
-/etc/init.d/tomcat-opal stop 
-sleep 10
+sleep 5
 /etc/init.d/tomcat-opal start
 sleep 10
 
