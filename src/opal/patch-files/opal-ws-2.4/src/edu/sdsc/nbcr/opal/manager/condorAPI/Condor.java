@@ -9,6 +9,7 @@ import condor.classad.*;
  * This class abstracts the condor system 
  */
 public class Condor implements Runnable{
+
   static final String SUBMIT_OUTPUT_PATTERN =
   "(\\d*) job\\(s\\) submitted to cluster (\\d*)\\.";
 
@@ -267,13 +268,14 @@ public class Condor implements Runnable{
 
 	System.out.println("submitted");
 
-	condor.rm(c);
-	c.waitFor();
+	//c.waitFor();
+	//condor.rm(c);
 	System.out.println("done");
 
 	JobDescription jd2 = new JobDescription();
 	jd2.addAttribute("executable", "/bin/date");
 	jd2.addAttribute("universe", "vanilla");
+	jd2.addAttribute("initialdir", "/tmp/opal-jobs");
 	jd2.addQueue();
 	jd2.setHandlerOnSuccess(new Handler(){
 	  public void handle(Event e){

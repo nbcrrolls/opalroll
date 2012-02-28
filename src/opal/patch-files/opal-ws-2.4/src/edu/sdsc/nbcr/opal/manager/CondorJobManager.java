@@ -170,7 +170,7 @@ public class CondorJobManager implements OpalJobManager {
 	long hardLimit = 0;
 	if ((props.getProperty("opal.hard_limit") != null)) {
 	    hardLimit = Long.parseLong(props.getProperty("opal.hard_limit"));
-	    logger.info("All jobs have a hard limit of "  + hardLimit + " seconds");
+	    logger.debug("All jobs have a hard limit of "  + hardLimit + " seconds");
 	}
 
 	// launch the job using the above information
@@ -188,14 +188,18 @@ public class CondorJobManager implements OpalJobManager {
 	    jd.addAttribute("getenv", "true");
 	    jd.addAttribute("executable", cmd);
 	    jd.addAttribute("arguments", args);
+
 	    jd.addAttribute("initialdir", workingDir);
-	    jd.addAttribute("output", workingDir + "/stdout.txt");
-	    jd.addAttribute("error", workingDir + "/stderr.txt");
-	    jd.addAttribute("should_transfer_files", "if_needed");
+	    //jd.addAttribute("output", workingDir + "/stdout.txt");
+	    //jd.addAttribute("error", workingDir + "/stderr.txt");
+	    //jd.addAttribute("initialdir", "/tmp/opal-jobs");
+	    jd.addAttribute("output",  "stdout.txt");
+	    jd.addAttribute("error",  "stderr.txt");
+
+	    jd.addAttribute("should_transfer_files", "yes");
 	    jd.addAttribute("when_to_transfer_output", "on_exit");
 	    jd.addAttribute("notification", "never");
-	    condor.setLogFile(workingDir + "/condor.log",
-			      5);
+	    condor.setLogFile(workingDir + "/condor.log", 5);
 
 	    // transfer all input files - this way the compute nodes don't
 	    // have to be on NFS
@@ -213,11 +217,11 @@ public class CondorJobManager implements OpalJobManager {
 
 	    jd.addQueue();
 
-	    if (hardLimit != 0) {
+	    /* if (hardLimit != 0) { // NPW no hard limit in condor, don't execute this part 	
 		String msg = "Condor job manager does not support hard limits";
 		logger.error(msg);
 		// not fatal - continue
-	    }
+	    } */
 
 	    Cluster cluster = condor.submit(jd);
 	    job = cluster.getJob(0);
