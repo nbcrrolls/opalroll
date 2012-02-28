@@ -75,7 +75,7 @@ public class AppMetadata extends ActionForm{
         separator = null;
         cmdLine = null;
         userEmail = null;
-        files = new FormFile[0]; 
+        files = new FormFile[0];  /* XXX was 1 */
         addFile = false;
         parallel = false;
         extractInputs = false;
