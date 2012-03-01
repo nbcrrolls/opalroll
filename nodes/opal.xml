@@ -126,6 +126,8 @@ sed -i 's/AddHandler imap-file map/#AddHandler imap-file map/g' /etc/httpd/conf/
 sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/httpd.conf
 
 
+<!-- restart httpd -->
+/etc/init.d/httpd restart
 
 <!-- configure and turn on tomcat -->
 /sbin/chkconfig --add tomcat-opal 
