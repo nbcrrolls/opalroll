@@ -74,6 +74,7 @@ install::
 
 build: 
 	tar -zxvf $(OPALDIST).tar.gz 
+	(cd $(OPALDIST); rm -rf configs/run_autodock.py)
 	cd patch-files && find $(OPALDIST) -type f | grep -v CVS | cpio -pduv ../
 
 clean::
