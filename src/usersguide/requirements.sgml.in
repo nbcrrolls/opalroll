@@ -6,17 +6,15 @@ The Opal Roll is for use with Rocks @ROCKS_VERSION@.
 </para>
 
 <para>
-You must install the following before installing the Opal roll.
+The Opal roll does not have any particular requirement. Java and tomcat are already 
+included with the roll. This roll will conflict with the Java roll! So it is important 
+not to install the Java roll along with the Opal roll.
 </para>
 
 <itemizedlist>
 <listitem><para>
 sge roll (NOTE: the sge roll can only be installed 
 during the front-end installation.  Most likely the sge roll is already installed on your Rocks system)
-</para></listitem>
-
-<listitem><para>
-java (Java is already installed on your Rocks system) 
 </para></listitem>
 
 </itemizedlist>
