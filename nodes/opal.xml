@@ -142,6 +142,7 @@ opal &Kickstart_PrivateHostname;:/export/&amp;
 CATALINA_HOME=/opt/tomcat
 #ls /share/opal/opal-jobs
 ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
+cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
 #cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
 
 /bin/echo "Tomcat setup completed sucessfully " &gt;&gt; $LOGFILE
