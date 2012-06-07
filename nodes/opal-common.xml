@@ -5,6 +5,8 @@
         <description>
         Opal (Java)
         Automatic Web service wrappers for scientific applications on Grid resources.
+        
+	Run on every node which is going to be an opal-server appliance
         </description>
 
         <copyright>
@@ -20,6 +22,8 @@
         <package>opal</package>
         <package>rocks-opal</package>
         <package>roll-opal-usersguide</package>
+        <package>mysql</package>
+        <package>mysql-server</package>
 
 <post os="linux" arch="x86_64">
 
@@ -60,29 +64,7 @@ chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
 
 <!--       setting up tomcat -->
 
-<!-- add tomcat user -->
-/bin/mkdir -p /export/home
-/usr/sbin/useradd -m -c "Tomcat" tomcat
-chown -R tomcat.tomcat /opt/tomcat
-chown -R tomcat.tomcat /opt/tomcat-*
-<file name="/tmp/create-sshkey.sh" perm="0755">
-#no password prompt
-mkdir /export/home/tomcat/.ssh
-ssh-keygen -t rsa -f /export/home/tomcat/.ssh/id_rsa -v -N "" -q
-
-
-# Copy public key to authorized_keys file.
-cat /export/home/tomcat/.ssh/id_rsa.pub >> /export/home/tomcat/.ssh/authorized_keys
-
-chmod 600 /export/home/tomcat/.ssh/authorized_keys
-chmod 700 /export/home/tomcat/.ssh
-chmod g-w /export/home/tomcat
-</file>
-
-/opt/rocks/bin/rocks sync users
-#set up shared keys
-/usr/bin/sudo -u tomcat bash /tmp/create-sshkey.sh
-rm /tmp/create-sshkey.sh
+<!-- add tomcat user already done in opal-server -->
 
 <!-- configure mod_jk -->
 <file name="/etc/httpd/conf.d/mod_jk.conf">
@@ -132,12 +114,6 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 <!-- configure and turn on tomcat -->
 /sbin/chkconfig --add tomcat-opal 
 
-<!-- Make NFS shared directory for opal jobs -->
-mkdir -m0755 -p /export/opal/opal-jobs 
-chown -R tomcat:tomcat /export/opal
-<file name="/etc/auto.share" mode="append">
-opal &Kickstart_PrivateHostname;:/export/&amp;
-</file>
 
 CATALINA_HOME=/opt/tomcat
 #ls /share/opal/opal-jobs
