@@ -16,15 +16,23 @@
 	<changelog>
 	</changelog>
 
-        <edge from="server" to="opal"/>
-        <edge from="ec2-client" to="opal"/>
+	<!-- general stuff for getting opal -->
+        <edge from="server" to="opal-server"/>
+        <!-- lets make the frontend an opalserver -->
+        <edge from="server" to="opal-common"/>
+
+	<!-- this is for the opal-server appliance -->
+	<edge from="client" to="opal-common" cond="opal-server"/>
+
+	<!-- don't know if this things still works -->
+        <edge from="ec2-client" to="opal-common"/>
         
         <order head="autofs-server">
-                <tail>opal</tail>
+                <tail>opal-server</tail>
         </order>
 
         <order head="sge-base">
-                <tail>opal</tail>
+                <tail>opal-common</tail>
         </order>
 
 </graph>

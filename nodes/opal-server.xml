@@ -74,6 +74,21 @@ do
     rm -rf $i
 done
 </file>
+i
+
+<!--    define a opal appliance    -->
+/opt/rocks/bin/rocks add appliance opal-server membership="Opal Server" public=yes os=linux node=login
+/opt/rocks/bin/rocks add appliance attr opal-server attr=opal-server value=true
+
+
+/opt/rocks/bin/rocks add host attr localhost  attr=opal-server value=true
+
+/opt/rocks/bin/rocks set appliance attr opal-server submit_host true
+/opt/rocks/bin/rocks set appliance attr opal-server exec_host false
+
 
 </post>
+
+
 </kickstart>
+
