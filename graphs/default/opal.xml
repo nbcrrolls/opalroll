@@ -22,12 +22,17 @@
         <edge from="server" to="opal-common"/>
 
 	<!-- this is for the opal-server appliance -->
-	<edge from="client" to="opal-common" cond="opal-server"/>
+	<edge from="client" to="opal-common" cond="opal_server"/>
 
 	<!-- don't know if this things still works -->
         <edge from="ec2-client" to="opal-common"/>
-        
+
+        <!-- I need the autofs already configure to add opal share-->
         <order head="autofs-server">
+                <tail>opal-server</tail>
+        </order>
+        <!-- i need the DB to register the new appliance -->
+        <order head="database-date">
                 <tail>opal-server</tail>
         </order>
 
