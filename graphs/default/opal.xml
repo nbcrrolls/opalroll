@@ -35,7 +35,11 @@
         <order head="database-date">
                 <tail>opal-server</tail>
         </order>
-
+        <!-- i need the tomcat user already defined on the system -->
+        <order head="411-client">
+                <tail>opal-common</tail>
+        </order>
+	<!-- scheduler must be there  -->
         <order head="sge-base">
                 <tail>opal-common</tail>
         </order>
