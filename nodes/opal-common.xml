@@ -116,10 +116,9 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 
 
 CATALINA_HOME=/opt/tomcat
-#ls /share/opal/opal-jobs
+ls /share/opal/opal-jobs
 ln -s /share/opal/opal-jobs  $CATALINA_HOME/webapps/opal-jobs
 cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
-#cp -p /opt/opal/etc/opal.xml $CATALINA_HOME/conf/Catalina/localhost
 
 /bin/echo "Tomcat setup completed sucessfully " &gt;&gt; $LOGFILE
 
@@ -180,7 +179,7 @@ if test -z /opt/gridengine; then
 fi
 
 #this replace the libdrmaa with JNI api compiled in
-if [ `/opt/rocks/bin/rocks report version` == "5.4.3" ]; then 
+if [ "&rocks_version;" == "5.4.3" -o "&rocks_version;" == "6.0" ]; then 
     echo Replacing libdrmaa &gt;&gt; $LOGFILE
     cp -pf  /opt/opal/lib/libdrmaa.so.1.0 /opt/gridengine/lib/lx26-amd64/libdrmaa.so.1.0
 fi
