@@ -129,14 +129,22 @@ cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
 mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
 
 
-<file name="/opt/opal/etc/opal.properties" perm="0644">
-tomcat.url=http://&opal_pubblic_fqdn;
+
+SERVER_NAME="&opal_public_fqdn;"
+if [ "$SERVER_NAME" == "" ] ; then
+	#if this is a frontend installation the 
+	#opal_public_fqdn is not set yet
+	SERVER_NAME="&Kickstart_PublicHostname;"
+fi
+
+<file name="/opt/opal/etc/opal.properties" perm="0644" vars="expanded">
+tomcat.url=http://$SERVER_NAME
 num.procs=8
 mpi.run=/opt/openmpi/bin/mpirun
 working.dir=opal-jobs
 mail.enable=true
 mail.smtp.host=localhost
-mail.smtp.from=noreply@&opal_pubblic_fqdn;
+mail.smtp.from=noreply@$SERVER_NAME
 mail.smtp.auth=false
 mail.smtp.debug=false
 mail.smtp.user=useless

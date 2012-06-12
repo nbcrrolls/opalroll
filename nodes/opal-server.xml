@@ -89,7 +89,7 @@ ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 /opt/rocks/bin/rocks add appliance opal-server membership="Opal Server" public=yes os=linux node=login
 /opt/rocks/bin/rocks add appliance attr opal-server attr=opal_server value=true
 #let's define the opal_public_fqdn attr for the first time
-/opt/rocks/bin/rocks add attr attr=opal_pubblic_fqdn value=&Kickstart_PublicHostname;
+/opt/rocks/bin/rocks add attr attr=opal_public_fqdn value=&Kickstart_PublicHostname;
 
 /opt/rocks/bin/rocks add host attr localhost  attr=opal_server value=true
 /opt/rocks/bin/rocks set appliance attr opal_server submit_host true
