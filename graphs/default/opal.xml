@@ -32,7 +32,7 @@
                 <tail>opal-server</tail>
         </order>
         <!-- i need the DB to register the new appliance -->
-        <order head="database-date">
+        <order head="database-data">
                 <tail>opal-server</tail>
         </order>
         <!-- i need the tomcat user already defined on the system -->
