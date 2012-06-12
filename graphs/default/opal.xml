@@ -43,6 +43,10 @@
         <order head="sge-base">
                 <tail>opal-common</tail>
         </order>
+	<!-- first the server stuff and the common -->
+        <order head="opal-server">
+                <tail>opal-common</tail>
+        </order>
 
 </graph>
 

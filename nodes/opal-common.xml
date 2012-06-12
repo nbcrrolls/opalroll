@@ -128,16 +128,17 @@ cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
 <!-- update opal.properties file -->
 mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
 
+
 <file name="/opt/opal/etc/opal.properties" perm="0644">
-tomcat.url=http://&Kickstart_PublicHostname;
+tomcat.url=http://&opal_pubblic_fqdn;
 num.procs=8
 mpi.run=/opt/openmpi/bin/mpirun
 working.dir=opal-jobs
 mail.enable=true
 mail.smtp.host=localhost
+mail.smtp.from=noreply@&opal_pubblic_fqdn;
 mail.smtp.auth=false
 mail.smtp.debug=false
-mail.smtp.from=noreply@&Kickstart_PublicHostname;
 mail.smtp.user=useless
 mail.smtp.password=useless
 opal.datalifetime=4 days
@@ -224,12 +225,6 @@ done
 sleep 5
 /etc/init.d/tomcat-opal start
 sleep 10
-
-<!-- update www docs with correct hostname -->
-sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/5.4.3/*.html
-
-<!-- add link to opal reference guide -->
-ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 
 <!-- Deploy possible installed applications -->
 /bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &amp;&gt; /tmp/opal-deploy.log
