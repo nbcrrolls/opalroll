@@ -32,7 +32,7 @@ LOGFILE=/tmp/opal-install.log
 
 #Installing java 64 bit
 #needed by the libdrmaa
-if [ `/opt/rocks/bin/rocks report version` == "5.4.3" ]; then
+if [ `opt/rocks/bin/rocks report version` == "5.4.3" ]; then
 	java -version &amp;&gt; /tmp/testjavabefore
 	rpm -ev --nodeps jdk.i586
 	rpm -ev --nodeps jdk.x86_64
@@ -113,6 +113,7 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 
 <!-- configure and turn on tomcat -->
 /sbin/chkconfig --add tomcat-opal 
+/sbin/chkconfig http on 
 
 
 CATALINA_HOME=/opt/tomcat
@@ -123,12 +124,8 @@ cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
 /bin/echo "Tomcat setup completed sucessfully " &gt;&gt; $LOGFILE
 
 
-
-
 <!-- update opal.properties file -->
 mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
-
-
 
 SERVER_NAME="&opal_public_fqdn;"
 if [ "$SERVER_NAME" == "" ] ; then
@@ -193,27 +190,10 @@ if [ "&rocks_version;" == "5.4.3" -o "&rocks_version;" == "6.0" ]; then
     cp -pf  /opt/opal/lib/libdrmaa.so.1.0 /opt/gridengine/lib/lx26-amd64/libdrmaa.so.1.0
 fi
 
-<!-- Install opal -->
-echo Installing opal &gt;&gt; $LOGFILE
-chown -R tomcat:tomcat /opt/opal
-cd /opt/opal
-export JAVA_HOME=/usr/java/latest
-export PATH=$JAVA_HOME/bin:$PATH
-
-echo "running install opal " &gt;&gt; $LOGFILE
-/bin/su tomcat -c "/opt/rocks/bin/ant install &gt; /opt/opal/install.log" &gt;&gt; $LOGFILE
-
-<!-- Enable directory listing for job output -->
-FILE=$CATALINA_HOME/conf/web.xml
-pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
-num=`expr $pre + 1`
-sed -i "${num} s/false/true/" $FILE
-
 <!-- add cron entry to remove old jobs -->
-
 <file name="/etc/cron.daily/opal-job-cleanup" perms="0755">
 #!/bin/bash
-
+# 
 # Removes old opal job directories older then default days
 
 CATALINA_HOME=/opt/tomcat
@@ -229,13 +209,49 @@ do
 done
 </file>
 
-<!-- turn on tomcat -->
-sleep 5
-/etc/init.d/tomcat-opal start
-sleep 10
 
-<!-- Deploy possible installed applications -->
-/bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &amp;&gt; /tmp/opal-deploy.log
+
+
+
+
+<file name="/etc/rc.d/rocksconfig.d/post-99-opaldeploy" perms="0700">
+#!/bin/bash
+#
+
+#sync the users
+/opt/rocks/bin/411get --all
+
+
+INSTALLLOG=/opt/opal/install.log
+
+echo "running install opal " &gt; $INSTALLLOG
+
+chown -R tomcat:tomcat /opt/opal
+chown -R tomcat:tomcat /opt/tomcat
+#it should not be running, but just in case...
+/etc/init.d/tomcat-opal stop
+
+cd /opt/opal
+export JAVA_HOME=/usr/java/latest
+export PATH=$JAVA_HOME/bin:$PATH
+/bin/su tomcat -c "/opt/rocks/bin/ant install" &gt;&gt; $INSTALLLOG 2&gt;&amp;1
+
+<!-- Enable directory listing for job output -->
+FILE=$CATALINA_HOME/conf/web.xml
+pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
+num=`expr $pre + 1`
+sed -i "${num} s/false/true/" $FILE
+
+#wait tomcat to deploy opal 
+/etc/init.d/tomcat-opal start
+sleep 20
+
+#Deploy possible installed applications 
+/bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &gt;&gt;  $INSTALLLOG  2&gt;&amp;1
+
+#rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy 
+</file>
+
 
 echo "Opal setup completed sucesfully" &gt;&gt; $LOGFILE
 

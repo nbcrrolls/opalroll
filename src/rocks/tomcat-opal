@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# chkconfig: 35 99 01
+# chkconfig: 35 95 01
 # description: Tomcat server 
 #
 
