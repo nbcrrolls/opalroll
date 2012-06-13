@@ -113,7 +113,7 @@ sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/ht
 
 <!-- configure and turn on tomcat -->
 /sbin/chkconfig --add tomcat-opal 
-/sbin/chkconfig http on 
+/sbin/chkconfig httpd on 
 
 
 CATALINA_HOME=/opt/tomcat
@@ -190,36 +190,19 @@ if [ "&rocks_version;" == "5.4.3" -o "&rocks_version;" == "6.0" ]; then
     cp -pf  /opt/opal/lib/libdrmaa.so.1.0 /opt/gridengine/lib/lx26-amd64/libdrmaa.so.1.0
 fi
 
-<!-- add cron entry to remove old jobs -->
-<file name="/etc/cron.daily/opal-job-cleanup" perms="0755">
-#!/bin/bash
-# 
-# Removes old opal job directories older then default days
-
-CATALINA_HOME=/opt/tomcat
-# default number of days to keep job direcotry 
-n=7
-
-#cd $CATALINA_HOME/webapps/opal-jobs
-cd $CATALINA_HOME/webapps/ROOT
-dirs=`find . -type d -name 'app*' -mtime +$n -print`
-for i in $dirs
-do
-    rm -rf $i
-done
-</file>
-
-
-
-
-
 
 <file name="/etc/rc.d/rocksconfig.d/post-99-opaldeploy" perms="0700">
 #!/bin/bash
 #
 
+
 #sync the users
-/opt/rocks/bin/411get --all
+while [ true ]; do
+        /opt/rocks/bin/411get --all
+        #if tomcat is defined get out of the loop
+        id tomcat &amp;&amp; break
+        sleep 4
+done
 
 
 INSTALLLOG=/opt/opal/install.log
@@ -228,12 +211,15 @@ echo "running install opal " &gt; $INSTALLLOG
 
 chown -R tomcat:tomcat /opt/opal
 chown -R tomcat:tomcat /opt/tomcat
+chown -R tomcat:tomcat /opt/tomcat-*
 #it should not be running, but just in case...
 /etc/init.d/tomcat-opal stop
 
 cd /opt/opal
 export JAVA_HOME=/usr/java/latest
 export PATH=$JAVA_HOME/bin:$PATH
+CATALINA_HOME=/opt/tomcat
+
 /bin/su tomcat -c "/opt/rocks/bin/ant install" &gt;&gt; $INSTALLLOG 2&gt;&amp;1
 
 <!-- Enable directory listing for job output -->

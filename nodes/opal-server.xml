@@ -54,6 +54,7 @@ chown -R tomcat:tomcat /export/opal
 opal &Kickstart_PrivateHostname;:/export/&amp;
 </file>
 
+/etc/init.d/autofs restart
 
 
 
@@ -94,6 +95,7 @@ ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide
 /opt/rocks/bin/rocks add host attr localhost  attr=opal_server value=true
 /opt/rocks/bin/rocks set appliance attr opal_server submit_host true
 /opt/rocks/bin/rocks set appliance attr opal_server exec_host false
+/opt/rocks/bin/rocks set appliance attr opal_server sge true
 
 </post>
 
