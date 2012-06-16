@@ -235,7 +235,7 @@ sleep 20
 #Deploy possible installed applications 
 /bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &gt;&gt;  $INSTALLLOG  2&gt;&amp;1
 
-#rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy 
+rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy 
 </file>
 
 
