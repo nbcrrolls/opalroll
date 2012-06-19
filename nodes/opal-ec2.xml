@@ -1,0 +1,103 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+        <description>
+        Opal (Java)
+	To be used with EC2
+        </description>
+
+        <copyright>
+        Copyright (c) 2000 - 2008 The Regents of the University of California.
+        All rights reserved.
+        </copyright>
+
+        <changelog>
+        </changelog>
+
+
+<post os="linux" arch="x86_64">
+
+<file name="/etc/init.d/ec2-sethostname" perms="0755">
+#!/bin/sh
+# $Id: opal-ec2.xml,v 1.1 2012/06/19 06:31:00 clem Exp $
+#
+# chkconfig: 2345 30 40
+# description: ec2 ssh key access
+#
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+
+changeName() {
+	#some logging
+	LOGFILE=/var/log/renameHost.log
+
+	echo "Start `date`" > $LOGFILE
+	#let's check if we are inside ec2
+	curl http://169.254.169.254/2009-04-04/meta-data/public-hostname || \
+		(echo "EC2 test failed terminating" >> $LOGFILE ; exit 1)
+
+	#	
+	# fix opal user dir
+	#
+	OPALUSER=tomcat
+	
+	if [ ! -d /home/$OPALUSER ];
+	then 
+		mkdir /home/$OPALUSER
+		chown $OPALUSER:$OPALUSER /home/$OPALUSER
+	fi
+	
+	#
+	# Hostname Opal
+	#
+	NewHostName=`curl http://169.254.169.254/2009-04-04/meta-data/public-hostname`
+	OldHostName=`cat /opt/opal/etc/opal.properties | grep tomcat | awk -F '//' '{print $2}'`
+	echo "Replacing old host name $OldHostName with new host name $NewHostName" >> $LOGFILE
+
+	#files to be modified
+	files='/opt/tomcat/webapps/opal2/WEB-INF/classes/opal.properties
+	/opt/opal/etc/opal.properties'
+	
+	for i in $files; do
+		sed -i "s/$OldHostName/$NewHostName/g" $i
+	done
+}
+
+
+
+case "$1" in
+   start)
+	echo -n "Changing host name"
+	changeName 
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] 
+	;;
+
+  stop)
+      echo -n "EC2 Root SSH Key "
+	[ $RETVAL -eq 0 ]
+	;;
+
+  restart|reload)
+   	$0 stop
+   	$0 start
+   	RETVAL=$?
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $RETVAL
+
+</file>
+
+/sbin/chkconfig --add ec2-sethostname 
+/sbin/chkconfig ec2-sethostname on
+
+</post>
+
+</kickstart>
