@@ -25,7 +25,7 @@
 	<edge from="client" to="opal-common" cond="opal_server"/>
 
 	<!-- don't know if this things still works -->
-        <edge from="ec2-client" to="opal-common"/>
+        <edge from="opal-common" to="opal-ec2" cond="opal_server and ec2_enable" />
 
         <!-- I need the autofs already configure to add opal share-->
         <order head="autofs-server">
