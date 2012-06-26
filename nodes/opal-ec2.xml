@@ -21,8 +21,8 @@
 /bin/touch /root/sethostname
 
 <file name="/etc/init.d/ec2-sethostname" perms="0755">
-#!/bin/sh
-# $Id: opal-ec2.xml,v 1.2 2012/06/22 17:44:04 clem Exp $
+#!/bin/bash
+# $Id: opal-ec2.xml,v 1.3 2012/06/26 19:03:35 clem Exp $
 #
 # chkconfig: 2345 30 40
 # description: ec2 ssh key access
@@ -36,8 +36,7 @@ changeName() {
 	LOGFILE=/var/log/renameHost.log
 
 	#let's check if we are inside ec2
-	curl http://169.254.169.254/2009-04-04/meta-data/public-hostname || \
-		(echo "EC2 test failed terminating" >> $LOGFILE ; exit 1)
+	curl http://169.254.169.254/2009-04-04/meta-data/public-hostname || exit 1;
 
 
 	echo "Start `date`" > $LOGFILE
@@ -55,7 +54,12 @@ changeName() {
 		mkdir /home/$OPALUSER
 		chown $OPALUSER:$OPALUSER /home/$OPALUSER
 	fi
-	
+
+	#
+	# fix hosts
+	#
+	echo `curl http://169.254.169.254/2009-04-04/meta-data/local-ipv4`  `curl http://169.254.169.254/2009-04-04/meta-data/hostname` >> /etc/hosts
+
 	#
 	# Opal
 	#
@@ -70,7 +74,7 @@ changeName() {
 	/opt/opal/etc/opal.properties'
 
 	for i in $files; do
-		sed -i "s/$OldHostName/$NewHostName/g" $i
+		sed -i "s%$OldHostName%$NewHostName%g" $i
 	done
 
 	#working dir
@@ -89,15 +93,16 @@ changeName() {
 	NEW_NAME=`hostname`
 	if [ -f /etc/init.d/sgemaster.$OLD_NAME ]; then
 		/etc/init.d/sgemaster.$OLD_NAME stop
-		mv /etc/init.d/sgemaster.$OLD_NAME /root/
+		mv -f /etc/init.d/sgemaster.$OLD_NAME /root/
 	fi
 	if [ -f /etc/init.d/sgeexecd.$OLD_NAME ]; then
 		/etc/init.d/sgeexecd.$OLD_NAME stop
-		mv /etc/init.d/sgeexecd.$OLD_NAME /root/
+		mv -f /etc/init.d/sgeexecd.$OLD_NAME /root/
 	fi
 
 	sed -i "s/$OLD_NAME/$NEW_NAME/" /opt/gridengine/util/install_modules/sge_configuration.conf
-	mv /opt/gridengine/default /opt/gridengine/default.orig-host
+	rm -rf /opt/gridengine/default.orig-host
+	mv -f /opt/gridengine/default /opt/gridengine/default.orig-host
 
 
 	. /etc/profile.d/sge-binaries.sh
