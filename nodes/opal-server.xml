@@ -74,6 +74,16 @@ for i in $dirs
 do
     rm -rf $i
 done
+
+# clean submit files (pbs or condor)
+cd /opt/tomcat/temp
+dirs=`find . -type d -name '*.submit' -mtime +$n -print`
+for i in $dirs
+do
+    rm -rf $i
+done
+
+
 </file>
 
 
