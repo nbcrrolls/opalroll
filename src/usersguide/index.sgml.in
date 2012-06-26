@@ -8,8 +8,9 @@
 	<!ENTITY chapter-05 SYSTEM "installing.sgml">
         <!ENTITY chapter-06 SYSTEM "autointerface.sgml">
 	<!ENTITY chapter-07 SYSTEM "using.sgml">
-        <!ENTITY chapter-08 SYSTEM "contact.sgml">
-	<!ENTITY chapter-09 SYSTEM "copyrights.sgml">
+	<!ENTITY chapter-08 SYSTEM "ec2.sgml">
+        <!ENTITY chapter-09 SYSTEM "contact.sgml">
+	<!ENTITY chapter-10 SYSTEM "copyrights.sgml">
 ]>
 
 <book>

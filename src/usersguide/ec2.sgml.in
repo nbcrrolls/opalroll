@@ -1,0 +1,56 @@
+<chapter id="using" xreflabel="Using the Opal Roll">
+
+
+<title>Creating an opal EC2 appliance</title>
+
+<para>
+To create an Amazon AMI which can run jobs with Opal you should install the EC2 and the KVM roll.
+</para>
+
+<section id="local" xreflabel="Create a local appliance">
+<title>Creating a local opal appliance</title>
+
+<para>
+You have to delcare the following attribute
+</para>
+<itemizedlist>
+<listitem><para>rocks add appliance attr devel-server ec2_enable true</para></listitem>
+<listitem><para>rocks add appliance attr devel-server opal_server true</para></listitem>
+<listitem><para>rocks add appliance attr devel-server sge true</para></listitem>
+<listitem><para>rocks add appliance attr devel-server exec_host true</para></listitem>
+<listitem><para>rocks add appliance attr devel-server submit_host true</para></listitem>
+</itemizedlist>
+<para>Then you have to create a virtual devel-server install it and shut it down</para>
+<screen>
+ # rocks add host vm vm-container-0-0 "Development Appliance"
+ # rocks start host vm devel-server-0-0-0
+ ....
+ # ssh devel-server-0-0-0
+ # poweroff
+</screen>
+
+</section>
+
+<section id="upload-opal" xreflabel="Upload your Virtual Machine">
+<title>Upload Your Virtual Machine</title>
+
+<para>
+First of all you need all the EC2 credential placed in you .ec2 
+directory as described in the ec2 roll documentation.
+Then you need to bundle your Opal appliance and to upload 
+it using the following command:
+</para>
+
+<screen>
+ # rocks create ec2 bundle devel-server-0-0-0
+ ... takes about 30 minutes
+ # rocks upload ec2 bundle devel-server-0-0-0 rocks60
+ ... takes about 30 minutes
+ # ec2-register rocks60/image.manifest.xml -n "New Opal Appliance"
+
+</screen>
+</section>
+
+
+
+</chapter>
