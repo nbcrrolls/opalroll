@@ -50,14 +50,14 @@ Funding agencies behind Opal:
 <para>Current Contributors</para>
 <itemizedlist>
 	<listitem><para>Sriram Krishnan: Lead Developer</para></listitem>
-	<listitem><para>Jane Ren: MetaServer plug-in, CSF4 plug-in</para></listitem>
-	<listitem><para>Luo Yuan: CSF4 plug-in</para></listitem>
+	<listitem><para>Luca Clementi: Dashboard, Dymanic GUI Generation, Rocks Rolls</para></listitem>
 	<listitem><para>Nadya Williams: Dashboard, Rocks Rolls </para></listitem>
 </itemizedlist>
 
 <para>Past Contributors</para>
 <itemizedlist>
-	<listitem><para>Luca Clementi: Dashboard, Dymanic GUI Generation</para></listitem>
+	<listitem><para>Jane Ren: MetaServer and CSF4 plugins</para></listitem>
+	<listitem><para>Luo Yuan: CSF4 plugin</para></listitem>
 	<listitem><para>Wes Goodman: Perl and Python clients</para></listitem>
 </itemizedlist>
 

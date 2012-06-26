@@ -31,20 +31,20 @@ $ su - root
 <simplesect>
 <title>What is installed </title>
 <itemizedlist>
-<listitem> <para>The roll will install the following: </para></listitem>
-<listitem> <para>create user tomcat </para></listitem>
-<listitem> <para>create mysql database opaldb. This database will be used by opal server.</para></listitem>
+<listitem> <para>Create user tomcat </para></listitem>
+<listitem> <para>Enable default character set utf8 for mysql (add configuration in /etc/my.cnf).</para></listitem>
+<listitem> <para>Create mysql database "opaldb". This database will be used by opal server.</para></listitem>
 <listitem> <para>/opt/opal </para></listitem>
 <listitem> <para>/opt/tomcat -> /opt/tomcat-5.5.17 </para></listitem>
 <listitem> <para> The directory for opal jobs is created as /export/opal/opal-jobs. It will be NFS mounted on compute nodes  as /share/opal/opla-jobs</para></listitem>
 <listitem> <para>/etc/init.d/tomcat-opal </para></listitem>
 <listitem> <para>/var/www/html/roll-documentation/opal </para></listitem>
-<listitem> <para>/etc/profile.d/opal.[sh,csh] </para></listitem>
+<listitem> <para>/etc/profile.d/opal.[csh,sh] </para></listitem>
 <listitem> <para>/etc/httpd/modules/mod_jk.so  </para></listitem>
 <listitem> <para>/etc/httpd/conf.d/mod_jk.conf  </para></listitem>
-<listitem> <para>/etc/cron.daily/opal-job-cleanup  </para></listitem>
 <listitem> <para>/etc/httpd/conf.d/mod_jk.conf </para></listitem>
 <listitem> <para>/etc/httpd/conf/workers.properties </para></listitem>
+<listitem> <para>/etc/cron.daily/opal-job-cleanup  </para></listitem>
 </itemizedlist>
 </simplesect>
 

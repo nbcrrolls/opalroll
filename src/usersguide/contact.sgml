@@ -1,10 +1,6 @@
 <chapter id="contact" xreflabel="Contact">
 
-
 <title>Contact Us</title>
-
-<simplesect>
-<title>Getting Help</title>
 
 <para>
 There are several ways to get help on the Opal roll.
@@ -17,23 +13,9 @@ There are several ways to get help on the Opal roll.
 <listitem><para>Luca Clementi <email>clem@sdsc.edu</email> </para></listitem>
 </itemizedlist>
 </listitem>
-<listitem><para>Send an email to NBCR Support <email>support@nbcr.net</email>.</para></listitem>
-<listitem><para>Visit the <ulink url="http://nbcr.net/forum">Rock'n Rolls section on NBCR Forum</ulink>.</para></listitem>
+<listitem><para>For general comments and feedback: send an email to NBCR Support <email>support@nbcr.net</email>.</para></listitem>
+<listitem><para>To report bugs and feature requests: please use the Sourceforge
+<ulink url="http://sourceforge.net/tracker/?group_id=211778">Opal Toolkit Tracker</ulink> </para></listitem>
 </orderedlist>
-
-</simplesect>
-
-<simplesect>
-<title>Feedback</title>
-
-<para>
-Please use the <ulink url="http://sourceforge.net/tracker/?group_id=211778">Opal Toolkit Tracker</ulink>
-on Sourceforge to report bugs and feature requests, and 
-the <ulink url="http://nbcr.net/forum">NBCR Web Services User Forum (WSUF)</ulink>
-for general comments and feedback.
-</para>
-
-</simplesect>
-
 
 </chapter>
