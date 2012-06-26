@@ -1,6 +1,4 @@
-<chapter id="using" xreflabel="Using the Opal Roll">
-
-
+<chapter id="opal-ec2" xreflabel="EC2 Opal Appliance">
 <title>Creating an opal EC2 appliance</title>
 
 <para>
@@ -20,7 +18,9 @@ You have to delcare the following attribute
 <listitem><para>rocks add appliance attr devel-server exec_host true</para></listitem>
 <listitem><para>rocks add appliance attr devel-server submit_host true</para></listitem>
 </itemizedlist>
-<para>Then you have to create a virtual devel-server install it and shut it down</para>
+<para>Then you have to create a virtual devel-server install it and shut it down.
+So assuming you have a vm-container called vm-container-0-0 and this is the first 
+devel-server you create, you should run the following commands:</para>
 <screen>
  # rocks add host vm vm-container-0-0 "Development Appliance"
  # rocks start host vm devel-server-0-0-0
@@ -47,8 +47,16 @@ it using the following command:
  # rocks upload ec2 bundle devel-server-0-0-0 rocks60
  ... takes about 30 minutes
  # ec2-register rocks60/image.manifest.xml -n "New Opal Appliance"
-
+ IMAGE	ami-34ab065d
 </screen>
+
+<para>
+You can now instantiate some Opal VM inside Amazon EC2 using the AMI 
+number printed by the ec2-register command. We also provide a public 
+AMI image of an Opal appliance for your convenience (bucket name is 
+rocks60 TODO insert AMI).
+</para>
+
 </section>
 
 

@@ -71,16 +71,19 @@ SEDSPEC += \
 
 default: $(NAME).spec ../$(NAME)-$(VERSION).tar.gz
 
-html: predoc preface.sgml index.sgml installing.sgml requirements.sgml using.sgml
+html: predoc preface.sgml index.sgml installing.sgml requirements.sgml using.sgml ec2.sgml
 	jw --backend html --dsl $(PWD)/rocks.dsl#html index.sgml
 
-pdf: predoc preface.sgml index.sgml installing.sgml requirements.sgml using.sgml
+pdf: predoc preface.sgml index.sgml installing.sgml requirements.sgml using.sgml ec2.sgml
 	jw --backend pdf --dsl $(PWD)/rocks.dsl#print index.sgml
 
 preface.sgml: preface.sgml.in
 	$(SED) $(SEDSPEC) $^ > $@
 
 index.sgml: index.sgml.in
+	$(SED) $(SEDSPEC) $^ > $@
+
+ec2.sgml: ec2.sgml.in
 	$(SED) $(SEDSPEC) $^ > $@
 
 installing.sgml: installing.sgml.in
