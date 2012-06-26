@@ -41,8 +41,23 @@ if [ `opt/rocks/bin/rocks report version` == "5.4.3" ]; then
 fi
 
 <!-- Setting up database -->
+<file name="/etc/my.cnf" mode="append">
+
+# globally configure default utf8 character set
+[mysqld]
+init_connect='SET collation_connection = utf8_general_ci'
+init_connect='SET NAMES utf8'
+default-character-set=utf8
+character-set-server=utf8
+character_set_client=utf8
+collation-server=utf8_general_ci
+skip-character-set-client-handshake
+</file>
+
 if [ ! -f /var/lock/subsys/mysqld ]; then
     /etc/init.d/mysqld start
+else
+    /etc/init.d/mysqld restart
 fi
 
 /sbin/chkconfig mysqld on
@@ -106,7 +121,6 @@ JkMount /app* worker1
 </file>
 sed -i 's/AddHandler imap-file map/#AddHandler imap-file map/g' /etc/httpd/conf/httpd.conf
 sed -i 's/AddHandler type-map var/#AddHandler type-map var/g' /etc/httpd/conf/httpd.conf
-
 
 <!-- restart httpd -->
 /etc/init.d/httpd restart
