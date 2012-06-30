@@ -32,7 +32,7 @@ LOGFILE=/tmp/opal-install.log
 
 #Installing java 64 bit
 #needed by the libdrmaa
-if [ `opt/rocks/bin/rocks report version` == "5.4.3" ]; then
+if [ `/opt/rocks/bin/rocks report version` == "5.4.3" ]; then
 	java -version &amp;&gt; /tmp/testjavabefore
 	rpm -ev --nodeps jdk.i586
 	rpm -ev --nodeps jdk.x86_64
