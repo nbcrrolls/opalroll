@@ -91,13 +91,10 @@ fi
 
 
 <!-- update www docs with correct hostname --> 
-sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/5.4.3/*.html 
+sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/`/opt/rocks/bin/rocks report version`/*.html 
  
 <!-- add link to opal reference guide --> 
-ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/5.4.3/refguide 
-
-
-
+ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/`/opt/rocks/bin/rocks report version`/refguide 
 
 <!--    define a opal appliance    -->
 /opt/rocks/bin/rocks add appliance opal-server membership="Opal Server" public=yes os=linux node=login
