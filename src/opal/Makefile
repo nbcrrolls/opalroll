@@ -66,7 +66,6 @@ install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mkdir -p $(ROOT)/export/apps/bin
 	mkdir -p $(ROOT)/$(PKGROOT)/deployed
-	install -m755 cat.sh $(ROOT)/export/apps/bin
 	cp -r $(OPALDIST)/* $(ROOT)/$(PKGROOT)
 	install -m755 deploy.sh $(ROOT)/$(PKGROOT)/deployed
 	cp $(ROOT)/$(PKGROOT)/configs/cat_config.xml $(ROOT)/$(PKGROOT)/deployed
