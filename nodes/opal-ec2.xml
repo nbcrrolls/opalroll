@@ -20,9 +20,9 @@
 
 /bin/touch /root/sethostname
 
-<file name="/etc/init.d/ec2-sethostname" perms="0755">
+<file name="/etc/init.d/ec2-sethostname-opal" perms="0755">
 #!/bin/bash
-# $Id: opal-ec2.xml,v 1.3 2012/06/26 19:03:35 clem Exp $
+# $Id: opal-ec2.xml,v 1.4 2012/07/03 19:44:21 clem Exp $
 #
 # chkconfig: 2345 30 40
 # description: ec2 ssh key access
@@ -168,8 +168,8 @@ exit $RETVAL
 
 </file>
 
-/sbin/chkconfig --add ec2-sethostname 
-/sbin/chkconfig ec2-sethostname on
+/sbin/chkconfig --add ec2-sethostname-opal
+/sbin/chkconfig ec2-sethostname-opal on
 
 </post>
 
