@@ -3,7 +3,6 @@
 	<!ENTITY preface    SYSTEM "preface.sgml">
 	<!ENTITY chapter-01 SYSTEM "introduction.sgml">
 	<!ENTITY chapter-02 SYSTEM "contributors.sgml">
-	<!ENTITY chapter-03 SYSTEM "download.sgml">
 	<!ENTITY chapter-04 SYSTEM "requirements.sgml">
 	<!ENTITY chapter-05 SYSTEM "installing.sgml">
         <!ENTITY chapter-06 SYSTEM "autointerface.sgml">
@@ -45,7 +44,6 @@
 &preface;
 &chapter-01;
 &chapter-02;
-&chapter-03;
 &chapter-04;
 &chapter-05;
 &chapter-06;

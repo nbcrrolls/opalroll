@@ -110,5 +110,5 @@ install:: build
 clean::
 	rm -f *.html
 	rm -f index.pdf
-	rm -f index.sgml using.sgml installing.sgml requirements.sgml preface.sgml roll-opal-usersguide.spec.in
+	rm -f index.sgml using.sgml installing.sgml requirements.sgml preface.sgml roll-opal-usersguide.spec.in ec2.sgml
 
