@@ -22,7 +22,7 @@
 
 <file name="/etc/init.d/ec2-sethostname-opal" perms="0755">
 #!/bin/bash
-# $Id: opal-ec2.xml,v 1.4 2012/07/03 19:44:21 clem Exp $
+# $Id: opal-ec2.xml,v 1.5 2012/07/04 01:13:16 clem Exp $
 #
 # chkconfig: 2345 30 40
 # description: ec2 ssh key access
@@ -170,6 +170,23 @@ exit $RETVAL
 
 /sbin/chkconfig --add ec2-sethostname-opal
 /sbin/chkconfig ec2-sethostname-opal on
+
+
+
+<file name="/var/www/html/index.html" perms="0644">
+<![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Your Page Title</title>
+<meta http-equiv="REFRESH" content="0;url=/opal2/dashboard"></HEAD>
+<BODY>
+Redirecting to...
+</BODY>
+</HTML>
+]]>
+</file>
+
 
 </post>
 
