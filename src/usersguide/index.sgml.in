@@ -7,6 +7,7 @@
 	<!ENTITY chapter-05 SYSTEM "installing.sgml">
         <!ENTITY chapter-06 SYSTEM "autointerface.sgml">
 	<!ENTITY chapter-07 SYSTEM "using.sgml">
+	<!ENTITY chapter-07a SYSTEM "appliance.sgml">
 	<!ENTITY chapter-08 SYSTEM "ec2.sgml">
         <!ENTITY chapter-09 SYSTEM "contact.sgml">
 	<!ENTITY chapter-10 SYSTEM "copyrights.sgml">
@@ -48,6 +49,7 @@
 &chapter-05;
 &chapter-06;
 &chapter-07;
+&chapter-07a;
 &chapter-08;
 &chapter-09;
 

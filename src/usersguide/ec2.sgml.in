@@ -5,7 +5,7 @@
 To create an Amazon AMI which can run jobs with Opal you should install the EC2 and the KVM roll.
 </para>
 
-<section id="local" xreflabel="Create a local appliance">
+<section id="local-ec2" xreflabel="Create a local EC2 appliance">
 <title>Creating a local opal appliance</title>
 
 <para>

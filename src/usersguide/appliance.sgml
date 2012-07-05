@@ -1,0 +1,58 @@
+<chapter id="opal-appliance" xreflabel="Opal Appliance">
+<title>Opal Appliances</title>
+
+<para>When using the Opal roll by default the frontend becomes the Opal 
+server, but it is also possbile to define another node in the cluster so
+that it will be used as Opal server.</para>
+
+
+
+<para>To this purpose you should firstly deactivate Opal server on the frontend:
+</para>
+<screen>
+ # chkconfig tomcat-opal off
+ # /etc/init.d/tomcat-opal
+</screen>
+
+<para>
+Then you should run insert-ether as described in the Rocks user guide and then 
+select Opal Server in the Appliance Type selection menu.</para>
+
+<para>During the installation the machine uses the attribute opal_public_fqdn to 
+configure the FQDN that will be used by the opal server.</para>
+
+<para>Otherwise if you have installed the KVM or XEN roll and you want to create a virtual machine to serve 
+as an Opal Appliance for your cluster you can run the following commands. Let's say you will run 
+your virtual Opal appliance on vm-container-0-0 and you will use one private interface and one 
+public intreface (for http traffic):
+</para>
+<screen>
+ # rocks add host vm vm-container-0-0 "Opal Server" num-macs=2
+</screen>
+
+
+<para>Then you should configure the pubblic interface, e.g.:
+</para>
+<screen>
+rocks set host interface subnet opal-server-0-0-0 eth1 public 
+rocks set host interface ip opal-server-0-0-0 eth1 169.228.41.222
+</screen>
+
+<para>Afterward you should define the opal_public_fqdn attribute for the pubblic interface
+</para>
+<screen>
+rocks set host attr opal-server-0-0-0 opal_public_fqdn nbcr-222.ucsd.edu
+</screen>
+
+<para>To start the installation run:
+</para>
+<screen>
+rocks start host vm opal-server-0-0-0
+</screen>
+
+<para>In 15/20 minute you opal appliance should be up and running.
+</para>
+
+
+
+</chapter>
