@@ -68,7 +68,7 @@ install::
 	mkdir -p $(ROOT)/$(PKGROOT)/deployed
 	cp -r $(OPALDIST)/* $(ROOT)/$(PKGROOT)
 	install -m755 deploy.sh $(ROOT)/$(PKGROOT)/deployed
-	cp $(ROOT)/$(PKGROOT)/configs/cat_config.xml $(ROOT)/$(PKGROOT)/deployed
+	install -m644 cat_config.xml $(ROOT)/$(PKGROOT)/deployed
 	cp $(ROOT)/$(PKGROOT)/configs/date_config.xml $(ROOT)/$(PKGROOT)/deployed
 
 build: 
