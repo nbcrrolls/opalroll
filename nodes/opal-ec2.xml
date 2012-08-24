@@ -22,7 +22,7 @@
 
 <file name="/etc/init.d/ec2-sethostname-opal" perms="0755">
 #!/bin/bash
-# $Id: opal-ec2.xml,v 1.5 2012/07/04 01:13:16 clem Exp $
+# $Id: opal-ec2.xml,v 1.6 2012/08/24 23:55:10 nadya Exp $
 #
 # chkconfig: 2345 30 40
 # description: ec2 ssh key access
@@ -31,12 +31,56 @@
 
 RETVAL=0
 
+function findPublicInfo() {
+x=$(curl -s -f http://169.254.169.254/latest/meta-data/public-ipv4)
+if [ "$x" == "" ] ; then
+   echo ""
+   echo "ERROR: public IP is not available"
+   exit 1
+else
+   publicIP=$x
+fi
+
+x=`host $publicIP | awk '{print $5}'`
+if [ "$x" == "" ] ; then
+   echo ""
+   echo "ERROR: public hostname is not available"
+   exit 1
+else
+   publicName=$x
+fi
+
+}
+
+function findPrivateInfo() {
+x=$(curl -s -f http://169.254.169.254/latest/meta-data/hostname)
+if [ "$x" == "" ] ; then
+   echo ""
+   echo "ERROR: private hostname is not available"
+   exit 1
+else
+   privateName=$x
+fi
+
+x=$(curl -s -f http://169.254.169.254/latest/meta-data/local-ipv4)
+if [ "$x" == "" ] ; then
+   echo ""
+   echo "ERROR: private IP is not available"
+   exit 1
+else
+   privateIP=$x
+fi
+}
+
 changeName() {
 	#some logging
 	LOGFILE=/var/log/renameHost.log
+        echo ""
+	findPrivateInfo
+	findPublicInfo
 
 	#let's check if we are inside ec2
-	curl http://169.254.169.254/2009-04-04/meta-data/public-hostname || exit 1;
+	curl http://169.254.169.254/latest/meta-data/public-hostname || exit 1;
 
 
 	echo "Start `date`" > $LOGFILE
@@ -58,13 +102,13 @@ changeName() {
 	#
 	# fix hosts
 	#
-	echo `curl http://169.254.169.254/2009-04-04/meta-data/local-ipv4`  `curl http://169.254.169.254/2009-04-04/meta-data/hostname` >> /etc/hosts
+	echo $privateIP $privateName >> /etc/hosts
 
 	#
 	# Opal
 	#
 	#hostname
-	NewHostName=`curl http://169.254.169.254/2009-04-04/meta-data/public-hostname`
+	NewHostName=$publicName
 	OldHostName=`cat /opt/opal/etc/opal.properties | grep tomcat | awk -F '//' '{print $2}'`
 
 	echo "Replacing old host name $OldHostName with new host name $NewHostName" &gt;&gt; $LOGFILE
@@ -111,9 +155,7 @@ changeName() {
 	cd $SGE_ROOT &amp;&amp; \
 	        ./inst_sge -m -auto ./util/install_modules/sge_configuration.conf
 	
-	echo "$NEW_NAME.local \
-	`curl http://169.254.169.254/2009-04-04/meta-data/hostname` $NEW_NAME" &gt; \
-	        $SGE_ROOT/$SGE_CELL/common/host_aliases
+	echo "$NEW_NAME.local $privateName $NEW_NAME" > $SGE_ROOT/$SGE_CELL/common/host_aliases
 	
 	cat default/common/configuration | sed -e "s/reporting=false/reporting=true/g" -e "s/joblog=false/joblog=true/g" &gt; /tmp/sge-default-common-config.conf
 	mv -f /tmp/sge-default-common-config.conf default/common/configuration
