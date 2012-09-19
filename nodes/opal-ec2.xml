@@ -22,7 +22,7 @@
 
 <file name="/etc/init.d/ec2-sethostname-opal" perms="0755">
 #!/bin/bash
-# $Id: opal-ec2.xml,v 1.6 2012/08/24 23:55:10 nadya Exp $
+# $Id: opal-ec2.xml,v 1.7 2012/09/19 22:29:10 nadya Exp $
 #
 # chkconfig: 2345 30 40
 # description: ec2 ssh key access
@@ -76,15 +76,14 @@ changeName() {
 	#some logging
 	LOGFILE=/var/log/renameHost.log
         echo ""
+
+	#let's check if we are inside ec2
+	curl http://169.254.169.254/latest/meta-data/ || exit 1;
+
 	findPrivateInfo
 	findPublicInfo
 
-	#let's check if we are inside ec2
-	curl http://169.254.169.254/latest/meta-data/public-hostname || exit 1;
-
-
 	echo "Start `date`" > $LOGFILE
-
 	
 	#fix directories
 	cd /share
