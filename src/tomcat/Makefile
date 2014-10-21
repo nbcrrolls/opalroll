@@ -62,67 +62,15 @@ REDHAT.ROOT = $(PWD)/../../
 include Rules.mk
 
 
-install:: install_5_5 
+install::
+	mkdir -p $(ROOT)/$(PKGROOT)-$(VERSION)
+	tar -xzf $(NAME)-$(VERSION).tar.gz
+	mv $(NAME)-$(VERSION)/* $(ROOT)/$(PKGROOT)-$(VERSION)/
+	ln -s $(PKGROOT)-$(VERSION) $(ROOT)/$(PKGROOT)
 
 
-build: build_5_5 
-
-install_6_0:
-	mkdir -p $(ROOT)/$(PKGROOT)-$(VERSION_6_0)/logs
-	(								\
-		cd $(NAME_6_0)-$(VERSION_6_0);				\
-		find . -type f |					\
-			cpio -pduv $(ROOT)/$(PKGROOT)-$(VERSION_6_0);	\
-	)
-	chmod a+rx $(ROOT)/$(PKGROOT)-$(VERSION_6_0)/logs
-	chown -R 412.412 $(ROOT)/$(PKGROOT)-$(VERSION_6_0)
-	chmod -R g+r $(ROOT)/$(PKGROOT)-$(VERSION_6_0)
-	find $(ROOT)/$(PKGROOT)-$(VERSION_6_0) -type d -exec chmod g+rwx {} \;
-
-install_5_5:
-	mkdir -p $(ROOT)/$(PKGROOT)-$(VERSION_5_5)/logs
-	(								\
-		cd $(NAME_5_5)-$(VERSION_5_5);				\
-		find . -type f |					\
-			cpio -pduv $(ROOT)/$(PKGROOT)-$(VERSION_5_5);	\
-	)
-	chmod a+rx $(ROOT)/$(PKGROOT)-$(VERSION_5_5)/logs
-	chown -R 412.412 $(ROOT)/$(PKGROOT)-$(VERSION_5_5)
-	chmod -R g+r $(ROOT)/$(PKGROOT)-$(VERSION_5_5)
-	find $(ROOT)/$(PKGROOT)-$(VERSION_5_5) -type d -exec chmod g+rwx {} \;
-	ln -s $(PKGROOT)-$(VERSION_5_5) $(ROOT)/$(PKGROOT)
-
-
-build_6_0:
-	(								\
-		tar -xzf $(NAME_6_0)-$(VERSION_6_0).tar.gz;		\
-		cd $(NAME_6_0)-$(VERSION_6_0)/bin;			\
-		tar -xzf jsvc.tar.gz;					\
-	)
-	(								\
-		cd $(NAME_6_0)-$(VERSION_6_0)/bin/jsvc-src;		\
-		autoconf -f;						\
-		sh ./configure --with-java=$(JAVA_HOME);		\
-		make;							\
-		cp jsvc ..;						\
-	)
-
-build_5_5:
-	(								\
-		tar -xzf $(NAME_5_5)-$(VERSION_5_5).tar.gz;		\
-		cd $(NAME_5_5)-$(VERSION_5_5)/bin;			\
-		tar -xzf jsvc.tar.gz;					\
-	)
-	(								\
-		cd $(NAME_5_5)-$(VERSION_5_5)/bin/jsvc-src;		\
-		autoconf -f;						\
-		sh ./configure --with-java=$(JAVA_HOME);		\
-		make;							\
-		cp jsvc ..;						\
-	)
-
-
+build:
 
 clean::
-	rm -rf $(NAME_6_0)-$(VERSION_6_0)
-	rm -rf $(NAME_5_5)-$(VERSION_5_5)
+
+
