@@ -12,11 +12,11 @@ include Rules.mk
 
 
 install::
-	mkdir -p $(ROOT)/etc/httpd/modules
+	mkdir -p $(ROOT)/usr/lib64/httpd/modules
 	(								\
 		cd $(NAME)-$(VERSION)-src;				\
 		install -m755 native/apache-2.0/*.so			\
-			$(ROOT)/etc/httpd/modules/;			\
+			$(ROOT)/usr/lib64/httpd/modules;			\
 	)
 
 build: 
