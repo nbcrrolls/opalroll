@@ -1,0 +1,120 @@
+diff -ru opal-ws-2.6-orig/build.properties opal-ws-2.6/build.properties
+--- opal-ws-2.6-orig/build.properties	2014-11-18 14:41:29.000000000 -0800
++++ opal-ws-2.6/build.properties	2014-11-18 14:48:09.700224626 -0800
+@@ -2,7 +2,7 @@
+ version = 2.6
+ 
+ # location of the tomcat installation
+-catalina.home = /path/to/catalina_home
++catalina.home = /opt/opal
+ 
+ # port number used by the tomcat server
+ tomcat.port = 8080
+diff -ru opal-ws-2.6-orig/etc/hibernate-opal.cfg.xml opal-ws-2.6/etc/hibernate-opal.cfg.xml
+--- opal-ws-2.6-orig/etc/hibernate-opal.cfg.xml	2014-11-18 14:41:29.000000000 -0800
++++ opal-ws-2.6/etc/hibernate-opal.cfg.xml	2014-11-18 16:40:49.226570018 -0800
+@@ -8,11 +8,13 @@
+     <session-factory>
+ 
+         <!-- Database connection settings for HSQL -->
++	<!--
+         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+         <property name="connection.url">jdbc:hsqldb:file:data/opaldb</property>
+         <property name="connection.username">sa</property>
+         <property name="connection.password"></property>
+         <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
++	-->
+ 
+         <!-- Database connection settings for PostgreSQL -->
+ 	<!--
+@@ -24,13 +26,11 @@
+ 	-->
+ 
+ 	<!-- Database connection settings for MySQL -->
+-	<!--
+         <property name="connection.driver_class">com.mysql.jdbc.Driver</property> 
+-        <property name="connection.url">jdbc:mysql://localhost/opal2_db?autoReconnect=true</property> 
+-        <property name="connection.username">opal_user</property> 
+-        <property name="connection.password">opal_passwd</property> 
++        <property name="connection.url">jdbc:mysql://localhost/opaldb?autoReconnect=true</property> 
++        <property name="connection.username">opal</property> 
++        <property name="connection.password">opal_mysql_passwd</property> 
+         <property name="dialect">org.hibernate.dialect.MySQLDialect</property> 
+-	-->
+ 
+         <!-- Database connection settings for DB2 -->
+         <!--
+diff -ru opal-ws-2.6-orig/etc/opal.properties opal-ws-2.6/etc/opal.properties
+--- opal-ws-2.6-orig/etc/opal.properties	2014-11-18 14:41:29.000000000 -0800
++++ opal-ws-2.6/etc/opal.properties	2014-11-18 17:55:11.442904118 -0800
+@@ -3,11 +3,11 @@
+ 
+ # directory used for your appConfig files in order to be deployed
+ # if you use a relative path it is relative to your catalina.home
+-opal.deploy.path=deploy
++opal.deploy.path=/opt/opal/deployed
+ 
+ # parallel parameters
+-num.procs=1
+-mpi.run=/path/to/your/mpi
++num.procs=8
++mpi.run=/opt/openmpi/bin/mpirun
+ 
+ # zip input/output files, if set to true
+ # data.archive=true
+@@ -18,7 +18,7 @@
+ # etc/opal.xml to $CATALINA_HOME/conf/Catalina/localhost/opal.xml. if
+ # the name of the symlink is changed to something other than "opal-jobs", 
+ # modify the opal.xml accordingly
+-# working.dir=opal-jobs
++working.dir=opal-jobs
+ 
+ # by default, opal doesn't allow the use of absolute paths in the command-line
+ # set the following parameter to allow some exceptions
+@@ -26,11 +26,11 @@
+ 
+ ## --- email configuration for server ---
+ # set to true if email notification is to be turned ON
+-mail.enable=false
++mail.enable=true
+ # url for smtp server
+-mail.smtp.host=smtp.gmail.com
++mail.smtp.host=localhost
+ # whether the server needs authentication
+-mail.smtp.auth=true
++mail.smtp.auth=false
+ # turn debugging on or off
+ mail.smtp.debug=false
+ # from address in notification email - could be a "no-reply" address
+@@ -47,8 +47,8 @@
+ opal.hard_limit=3600
+ 
+ # full qualified class name (FQCN) of the job manager being used
+-opal.jobmanager=edu.sdsc.nbcr.opal.manager.ForkJobManager
+-# opal.jobmanager=edu.sdsc.nbcr.opal.manager.DRMAAJobManager
++# opal.jobmanager=edu.sdsc.nbcr.opal.manager.ForkJobManager
++opal.jobmanager=edu.sdsc.nbcr.opal.manager.DRMAAJobManager
+ # opal.jobmanager=edu.sdsc.nbcr.opal.manager.GlobusJobManager
+ # opal.jobmanager=edu.sdsc.nbcr.opal.manager.PBSJobManager
+ # opal.jobmanager=edu.sdsc.nbcr.opal.manager.CSFJobManager
+@@ -60,7 +60,7 @@
+ # the parallel environment (PE) being used by DRMAA
+ drmaa.pe=mpich
+ # change the default DRMAA queue 
+-# drmaa.queue=foo
++drmaa.queue=all.q
+ 
+ ## --- information for the Globus job managers ---
+ # url for the globus gatekeeper
+@@ -78,9 +78,9 @@
+ 
+ ## --- information for the per IP limits on job submission ---
+ # boolean switch to turn processing on or off
+-opal.ip.processing=false
++opal.ip.processing=true
+ # number of jobs per IP per hour
+-opal.ip.limit=10
++opal.ip.limit=35
+ # block all jobs from this IP - comma separated entries (optional)
+ opal.ip.blacklist=66.102.7.104
+ # always allow jobs from this IP - comma separated entries (optional)

@@ -148,34 +148,15 @@ if [ "$SERVER_NAME" == "" ] ; then
 	SERVER_NAME="&Kickstart_PublicHostname;"
 fi
 
-<file name="/opt/opal/etc/opal.properties" perm="0644" vars="expanded">
-tomcat.url=http://$SERVER_NAME
-num.procs=8
-mpi.run=/opt/openmpi/bin/mpirun
-working.dir=opal-jobs
-mail.enable=true
-mail.smtp.host=localhost
-mail.smtp.from=noreply@$SERVER_NAME
-mail.smtp.auth=false
-mail.smtp.debug=false
-mail.smtp.user=useless
-mail.smtp.password=useless
-opal.datalifetime=4 days
-opal.hard_limit=3600
-opal.jobmanager=edu.sdsc.nbcr.opal.manager.DRMAAJobManager
-drmaa.pe=mpich
-drmaa.queue=all.q
-globus.gatekeeper=host:2119/jobmanager-sge
-globus.service_cert=/path/to/your/globus/cert
-globus.service_privkey=/path/to/your/globus/key
-globus.gridftp_base=gsiftp://host:2811/working_dir
-csf4.workingDir=opal_runs
-mpi.script=/opt/condor/etc/examples/mp1script
-opal.ip.processing=true
-opal.ip.limit=35
-opal.ip.blacklist=66.102.7.104
-opal.ip.whitelist=66.102.7.105, 127.0.0.1
-</file>
+#  ------  fix the opal.properties -----
+#TODO this should be moved in a reconfigure section
+
+# tomcat URL
+sed -i "s/tomcat.url=.*/tomcat.url=http:\/\/$SERVER_NAME/" /opt/opal/etc/opal.properties
+# stmp from
+sed -i "s/mail.smtp.from=foo@bar.com/mail.smtp.from=noreply@$SERVER_NAME/" /opt/opal/etc/opal.properties
+
+
 
 <!-- Set correct number of processors for SGE -->
 #this is not gonna work on a post install script

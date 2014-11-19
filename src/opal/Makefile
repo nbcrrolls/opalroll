@@ -58,23 +58,19 @@ include Rules.mk
 
 OPALDIST = $(NAME)-ws-$(VERSION)
 
-#SEDSPEC += \
-        -e 's%@ROOT@%$(ROOT)%g' \
-        -e 's%@PKGROOT@%$(PKGROOT)%g' 
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mkdir -p $(ROOT)/export/apps/bin
 	mkdir -p $(ROOT)/$(PKGROOT)/deployed
 	cp -r $(OPALDIST)/* $(ROOT)/$(PKGROOT)
-	install -m755 deploy.sh $(ROOT)/$(PKGROOT)/deployed
 	install -m644 cat_config.xml $(ROOT)/$(PKGROOT)/deployed
 	cp $(ROOT)/$(PKGROOT)/configs/date_config.xml $(ROOT)/$(PKGROOT)/deployed
 
 build: 
 	tar -zxvf $(OPALDIST).tar.gz 
 	(cd $(OPALDIST); rm -rf configs/run_autodock.py)
-	cd patch-files && find $(OPALDIST) -type f | grep -v CVS | cpio -pduv ../
+	cd $(OPALDIST) && patch -p1 < ../patch-$(VERSION)
 
 clean::
 	rm -rf $(OPALDIST)
