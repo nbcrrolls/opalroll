@@ -28,24 +28,8 @@ LOGFILE=/tmp/opal-install.log
 /usr/sbin/useradd -m -c "Tomcat" tomcat
 chown -R tomcat.tomcat /opt/tomcat
 chown -R tomcat.tomcat /opt/tomcat-*
-<file name="/tmp/create-sshkey.sh" perm="0755">
-#no password prompt
-mkdir /export/home/tomcat/.ssh
-ssh-keygen -t rsa -f /export/home/tomcat/.ssh/id_rsa -v -N "" -q
-
-
-# Copy public key to authorized_keys file.
-cat /export/home/tomcat/.ssh/id_rsa.pub >> /export/home/tomcat/.ssh/authorized_keys
-
-chmod 600 /export/home/tomcat/.ssh/authorized_keys
-chmod 700 /export/home/tomcat/.ssh
-chmod g-w /export/home/tomcat
-</file>
 
 /opt/rocks/bin/rocks sync users
-#set up shared keys
-/usr/bin/sudo -u tomcat bash /tmp/create-sshkey.sh
-rm /tmp/create-sshkey.sh
 
 <!-- Make NFS shared directory for opal jobs -->
 mkdir -m0755 -p /export/opal/opal-jobs 
