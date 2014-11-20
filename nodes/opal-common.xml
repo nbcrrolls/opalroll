@@ -71,11 +71,10 @@ mkpasswd -l 10 -s 0 2> /dev/null
 OPAL_DB_PASS=`cat /opt/opal/etc/opal.pass`
 /bin/echo -en GRANT ALL PRIVILEGES ON opaldb.* TO 'opal'@'localhost' IDENTIFIED BY \'$OPAL_DB_PASS\' \; | /usr/bin/mysql
 
-cp /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.hsql
-cp /opt/opal/etc/hibernate-opal.cfg.xml.mysql /opt/opal/etc/hibernate-opal.cfg.xml
+cp /opt/opal/etc/hibernate-opal.cfg.xml /opt/opal/etc/hibernate-opal.cfg.xml.orig
 sed -i "s/opal_mysql_passwd/$OPAL_DB_PASS/" /opt/opal/etc/hibernate-opal.cfg.xml
 chmod go-r /opt/opal/etc/hibernate-opal.cfg.xml
-/bin/echo "DB setup complited" &gt;&gt; $LOGFILE
+/bin/echo "DB setup completed" &gt;&gt; $LOGFILE
 
 <!--       setting up tomcat -->
 
@@ -217,6 +216,9 @@ CATALINA_HOME=/opt/tomcat
 
 /bin/su tomcat -c "/opt/rocks/bin/ant install" &gt;&gt; $INSTALLLOG 2&gt;&amp;1
 
+mkdir /opt/tomcat/deployed
+cp /opt/opal/deployed/cat_config.xml /opt/tomcat/deployed
+
 <!-- Enable directory listing for job output -->
 FILE=$CATALINA_HOME/conf/web.xml
 pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
@@ -227,8 +229,6 @@ sed -i "${num} s/false/true/" $FILE
 /etc/init.d/tomcat-opal start
 sleep 20
 
-#Deploy possible installed applications 
-/bin/su tomcat -c "/opt/opal/deployed/deploy.sh" &gt;&gt;  $INSTALLLOG  2&gt;&amp;1
 
 rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy 
 </file>
