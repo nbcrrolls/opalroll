@@ -91,6 +91,12 @@ ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/`/opt/rocks/bin/rocks
 /opt/rocks/bin/rocks set appliance attr opal-server exec_host false
 /opt/rocks/bin/rocks set appliance attr opal-server sge true
 
+/opt/rocks/bin/rocks add firewall appliance=opal-server chain=INPUT \
+        flags="-m state --state NEW" protocol=tcp service=www \
+        action=ACCEPT network=public rulename="A40-WWW-PUBLIC-LAN" \
+        rulesrc="system"
+
+
 </post>
 
 </kickstart>
