@@ -138,7 +138,7 @@ cp /opt/opal/etc/index.html $CATALINA_HOME/webapps/opal-jobs
 
 
 <!-- update opal.properties file -->
-mv /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
+cp /opt/opal/etc/opal.properties /opt/opal/etc/opal.properties.orig
 
 SERVER_NAME="&opal_public_fqdn;"
 if [ "$SERVER_NAME" == "" ] ; then
