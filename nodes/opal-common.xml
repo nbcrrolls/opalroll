@@ -216,9 +216,6 @@ CATALINA_HOME=/opt/tomcat
 
 /bin/su tomcat -c "/opt/rocks/bin/ant install" &gt;&gt; $INSTALLLOG 2&gt;&amp;1
 
-mkdir /opt/tomcat/deployed
-cp /opt/opal/deployed/cat_config.xml /opt/tomcat/deployed
-
 <!-- Enable directory listing for job output -->
 FILE=$CATALINA_HOME/conf/web.xml
 pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
