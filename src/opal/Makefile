@@ -64,6 +64,7 @@ install::
 	mkdir -p $(ROOT)/export/apps/bin
 	mkdir -p $(ROOT)/$(PKGROOT)/deployed
 	cp -r $(OPALDIST)/* $(ROOT)/$(PKGROOT)
+	cp index.html $(ROOT)/$(PKGROOT)/etc/
 	install -m644 cat_config.xml $(ROOT)/$(PKGROOT)/deployed/cat.xml
 	cp $(ROOT)/$(PKGROOT)/configs/date_config.xml $(ROOT)/$(PKGROOT)/deployed/date.xml
 
