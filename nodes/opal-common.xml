@@ -231,6 +231,25 @@ rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy
 </file>
 
 
+if [ ! -f /var/www/html/index.html ]; then
+
+<file name="/var/www/html/index.html" perms="0644">
+<![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Your Page Title</title>
+<meta http-equiv="REFRESH" content="0;url=/opal2/dashboard"></HEAD>
+<BODY>
+Redirecting to Opal
+</BODY>
+</HTML>
+]]>
+</file>
+
+fi
+
+
 echo "Opal setup completed sucesfully" &gt;&gt; $LOGFILE
 
 </post>
