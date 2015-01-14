@@ -118,3 +118,14 @@ diff -ru opal-ws-2.6-orig/etc/opal.properties opal-ws-2.6/etc/opal.properties
  # block all jobs from this IP - comma separated entries (optional)
  opal.ip.blacklist=66.102.7.104
  # always allow jobs from this IP - comma separated entries (optional)
+diff -ru opal-ws-2.6-orig/src/edu/sdsc/nbcr/opal/manager/DRMAAJobManager.java opal-ws-2.6/src/edu/sdsc/nbcr/opal/manager/DRMAAJobManager.java
+--- opal-ws-2.6-orig/src/edu/sdsc/nbcr/opal/manager/DRMAAJobManager.java	2014-11-20 13:46:28.000000000 -0800
++++ opal-ws-2.6/src/edu/sdsc/nbcr/opal/manager/DRMAAJobManager.java	2015-01-13 10:55:19.267169609 -0800
+@@ -241,6 +241,7 @@
+ 	    if (config.isParallel()) {
+ 		nativeSpec += "-pe " + drmaaPE + " " + numProcs;
+ 	    }
++	    nativeSpec += "-shell yes " ;
+ 	    jt.setNativeSpecification(nativeSpec);
+ 	    jt.setRemoteCommand(cmd);
+ 	    jt.setArgs(Arrays.asList(argsArray));
