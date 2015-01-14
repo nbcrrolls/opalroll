@@ -20,7 +20,6 @@
 
 LOGFILE=/tmp/opal-install.log
 
-
 <!--       setting up tomcat -->
 
 <!-- add tomcat user -->
@@ -32,8 +31,15 @@ chown -R tomcat.tomcat /opt/tomcat-*
 /opt/rocks/bin/rocks sync users
 
 <!-- Make NFS shared directory for opal jobs -->
-mkdir -m0755 -p /export/opal/opal-jobs 
-chown -R tomcat:tomcat /export/opal
+ls /share/opal
+if [ -d /share/opal ]; then
+    mkdir -m0755 -p /share/opal/opal-jobs 
+    chown -R tomcat:tomcat /share/opal/opal-jobs
+else
+    mkdir -m0755 -p /export/opal/opal-jobs 
+    chown -R tomcat:tomcat /export/opal
+fi
+
 <file name="/etc/auto.share" mode="append">
 opal &Kickstart_PrivateHostname;:/export/&amp;
 </file>
