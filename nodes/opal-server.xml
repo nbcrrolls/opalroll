@@ -102,8 +102,8 @@ ln -s /opt/opal/docs /var/www/html/roll-documentation/opal/`/opt/rocks/bin/rocks
         rulesrc="system"
 
 
-<!-- set job wallclock to 2 weeks, to set no limit use INFINITY. Default config is 24hrs -->
-qconf -mattr queue h_rt 336:00:00 all.q
+<!-- set job wallclock to 1 week, to set no limit use INFINITY. Default config is 24hrs -->
+qconf -mattr queue h_rt 168:00:00 all.q
 
 </post>
 
