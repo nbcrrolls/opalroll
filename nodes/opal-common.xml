@@ -206,7 +206,8 @@ echo "running install opal " &gt; $INSTALLLOG
 chown -R tomcat:tomcat /opt/opal
 chown -R tomcat:tomcat /opt/tomcat
 chown -R tomcat:tomcat /opt/tomcat-*
-#it should not be running, but just in case...
+
+# it should not be running, but just in case...
 /etc/init.d/tomcat-opal stop
 
 cd /opt/opal
@@ -222,10 +223,14 @@ pre=`cat -n $FILE  | grep listings | grep param-name | awk '{print $1}'`
 num=`expr $pre + 1`
 sed -i "${num} s/false/true/" $FILE
 
-#wait tomcat to deploy opal 
+# wait tomcat to deploy opal 
 /etc/init.d/tomcat-opal start
 sleep 20
 
+# install cron jobs
+/usr/bin/crontab /opt/opal/etc/cron/opal-stats
+/bin/cp /opt/opal/etc/cron/save-http-logs /etc/cron.daily
+/bin/cp /opt/opal/etc/cron/opal-job-cleanup /etc/cron.daily
 
 rm -rf /etc/rc.d/rocksconfig.d/post-99-opaldeploy 
 </file>

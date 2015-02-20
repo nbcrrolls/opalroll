@@ -47,38 +47,6 @@ opal &Kickstart_PrivateHostname;:/export/&amp;
 /etc/init.d/autofs restart
 
 
-<!-- add cron entry to remove old jobs -->
-<file name="/etc/cron.daily/opal-job-cleanup" perms="0755">
-#!/bin/bash
-
-# Removes old opal job directories older then default days
-
-# default number of days to keep job direcotry 
-n=21
-
-JOBDIR=/share/opal/opal-jobs
-
-if [ -d $JOBDIR ]; then
-  cd $JOBDIR
-  dirs=`find . -type d -name 'app*' -mtime +$n -print`
-  for i in $dirs
-  do
-      rm -rf $i
-  done
-fi
-
-# clean submit files (pbs or condor)
-if [ -d /opt/tomcat/temp ] ; then
-    cd /opt/tomcat/temp
-    dirs=`find . -type d -name '*.submit' -mtime +$n -print`
-    for i in $dirs
-    do
-        rm -rf $i
-    done
-fi
-
-</file>
-
 <!-- update www docs with correct hostname --> 
 sed -i "s/yourservername/&Kickstart_PublicHostname;/g" /var/www/html/roll-documentation/opal/`/opt/rocks/bin/rocks report version`/*.html 
  

@@ -67,6 +67,12 @@ install::
 	#sge drmaa libraries with jni enabled for rocks 5.4.3
 	mkdir -p $(ROOT)/opt/opal/lib/
 	$(INSTALL) -m755 libdrmaa.so.1.0 $(ROOT)/opt/opal/lib/
+	mkdir -p $(ROOT)/opt/opal/etc/cron/
+	$(INSTALL) -m755 cron/opal-job-cleanup $(ROOT)/opt/opal/etc/cron/
+	$(INSTALL) -m755 cron/save-http-logs $(ROOT)/opt/opal/etc/cron/
+	$(INSTALL) -m644 cron/opal-stats $(ROOT)/opt/opal/etc/cron/
+	mkdir -p $(ROOT)/opt/opal/bin/
+	$(INSTALL) -m755 bin/*[py,sh] $(ROOT)/opt/opal/bin/
 
 clean::
 	rm -f $(NAME).spec.in

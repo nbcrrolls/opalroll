@@ -1,0 +1,3 @@
+# collect monthly opal stats
+5  5 3 * *  ls /share/opal; /opt/opal/bin/cronOpalStats.sh
+
