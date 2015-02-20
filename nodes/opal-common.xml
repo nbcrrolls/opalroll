@@ -154,7 +154,7 @@ fi
 sed -i "s/tomcat.url=.*/tomcat.url=http:\/\/$SERVER_NAME/" /opt/opal/etc/opal.properties
 # stmp from
 sed -i "s/mail.smtp.from=foo@bar.com/mail.smtp.from=noreply@$SERVER_NAME/" /opt/opal/etc/opal.properties
-
+sed -i "s/SERVER_NAME/$SERVER_NAME/" /opt/opal/etc/opal-http.conf
 
 
 <!-- Set correct number of processors for SGE -->

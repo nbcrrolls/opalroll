@@ -2,3 +2,6 @@
 Rocks Roll for the Opal toolkit
 http://nbcr.ucsd.edu/data/docs/opal/
 
+Add opal-http.conf and install it in /opt/opal/etc/
+May need this file in /etc/http/conf.d/ for some installs
+

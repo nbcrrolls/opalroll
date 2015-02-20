@@ -71,6 +71,7 @@ install::
 	$(INSTALL) -m755 cron/opal-job-cleanup $(ROOT)/opt/opal/etc/cron/
 	$(INSTALL) -m755 cron/save-http-logs $(ROOT)/opt/opal/etc/cron/
 	$(INSTALL) -m644 cron/opal-stats $(ROOT)/opt/opal/etc/cron/
+	$(INSTALL) -m644 opal-http.conf $(ROOT)/opt/opal/etc/
 	mkdir -p $(ROOT)/opt/opal/bin/
 	$(INSTALL) -m755 bin/*[py,sh] $(ROOT)/opt/opal/bin/
 
