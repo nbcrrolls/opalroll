@@ -154,8 +154,12 @@ fi
 sed -i "s/tomcat.url=.*/tomcat.url=http:\/\/$SERVER_NAME/" /opt/opal/etc/opal.properties
 # stmp from
 sed -i "s/mail.smtp.from=foo@bar.com/mail.smtp.from=noreply@$SERVER_NAME/" /opt/opal/etc/opal.properties
-sed -i "s/SERVER_NAME/$SERVER_NAME/" /opt/opal/etc/opal-http.conf
+# whitelist the server itself
+sed -i "s/SERVER_NAME/$SERVER_NAME/" /opt/opal/etc/opal.properties
 
+#  ------  fix the opal-http.conf file -----
+# may need this for installs without meme
+sed -i "s/SERVER_NAME/$SERVER_NAME/" /opt/opal/etc/opal-http.conf
 
 <!-- Set correct number of processors for SGE -->
 #this is not gonna work on a post install script
